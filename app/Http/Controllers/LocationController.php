@@ -49,7 +49,6 @@ class LocationController extends Controller
     public function getListDistrict(Request $request){
         $key = $request->key;
         $city_code = $request->city_code;
-
         $data = District::where('city_id',$city_code)
         ->where(function ($q) use ($key) {
             $q->where('original_name','like','%'.$key.'%')->orWhere('show_name','like','%'.$key.'%');
