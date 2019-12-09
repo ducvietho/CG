@@ -1,6 +1,8 @@
 <?php
 
+use App\Providers\AuthServiceProvider;
 use Illuminate\Filesystem\FilesystemServiceProvider;
+use Tymon\JWTAuth\Providers\LumenServiceProvider;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -55,6 +57,8 @@ $app->singleton('filesystem', function ($app) {
     );
 });
 $app->configure('queue');
+$app->configure('jwt');
+$app->configure('auth');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -91,6 +95,8 @@ $app->routeMiddleware([
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
