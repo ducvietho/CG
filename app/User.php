@@ -23,7 +23,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $table = 'users';
     protected $fillable = [
-        'user_name', 'pass', 'name', 'email', 'phone', 'address_detail', 'avatar', 'avatar', 'type', 'block', 'code_address', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id','type_account'
+        'user_name', 'password', 'name', 'email', 'phone', 'address_detail', 'avatar', 'type', 'block', 'code_address', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id','type_account'
     ];
 
     /**
@@ -32,7 +32,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'user_id','pass',
+        'password',
     ];
 
     public function getJWTIdentifier()
@@ -49,7 +49,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $user = User::create([
             'user_id' => $data['user_id'],
-            'pass' => Hash::make($data['pass']),
+            'password' => Hash::make($data['password']),
             'name' => $data['name'],
             'user_name' => $data['user_name'],
             'gender' => $data['gender'],

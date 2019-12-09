@@ -24,18 +24,19 @@ class LoginController extends Controller
         $this->jwt = $jwt;
     }
     public function login(Request $request){
-        $token = $this->jwt->attempt($request->only('user_id','pass'));
+        $token = $this->jwt->attempt($request->only('user_id','password'));
         if ($token == false){
             return $this->successResponseMessage(new \stdClass(), 413, "Password inccorect");
         }else{
+            $user = User::where('user_id',$request->user_id)->where('type_account',0)->first();
             if (isset($request->fcm_token)) {
-                $user = User::where('user_id',$request->user_id)->where('type_account',0)->first();
                 $user->update([
                     'fcm_token' => $request->fcm_token,
                 ]);
                 $request->request->set('user_id',$user->id);
 
             }
+            $data['token'] = $token;
             $data['user'] = new UserResource($user);
             return $this->successResponseMessage($data, 200, "Login success");
         }
