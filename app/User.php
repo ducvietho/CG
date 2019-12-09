@@ -8,11 +8,14 @@ use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable;
-
+    private const TYPE_NURSE = 1;
+    private const TYPE_PATIENT = 2;
+    private const TYPE_ACCOUNT_NORMAL = 0;
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +23,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $table = 'users';
     protected $fillable = [
-        'user_name','pass', 'name','email', 'phone', 'address_detail', 'avatar','avatar','type_mom','block','code_address','gender','birthday','fcm_token','provide_id','provide_id','district_code'
+        'user_name', 'pass', 'name', 'email', 'phone', 'address_detail', 'avatar', 'avatar', 'type', 'block', 'code_address', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id','type_account'
     ];
 
     /**
@@ -29,8 +32,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'pass',
+        'user_id','pass',
     ];
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -40,9 +44,28 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [];
     }
+
     public static function createNew($data)
     {
-       
+        $user = User::create([
+            'user_id' => $data['user_id'],
+            'pass' => Hash::make($data['pass']),
+            'name' => $data['name'],
+            'user_name' => $data['user_name'],
+            'gender' => $data['gender'],
+            'birthday' => $data['birthday'],
+            'phone' => $data['phone'],
+            'email' => $data['email'],
+            'code_address' => isset($data['citi_code']) ? $data['citi_code'] : 0,
+            'district_code' => isset($data['district_code']) ? $data['district_code'] : 0,
+            'address_detail' => isset($data['address']) ? $data['address'] : '',
+            'avatar' =>  env('AVATAR_DEFAULT'),
+            'type' => isset($data['type']) ? $data['type'] : 1,
+            'fcm_token' => '',
+            'provide_id' => isset($data['provide_id']) ? $data['provide_id'] : '',
+            'type_account' => isset($data['type_account']) ? $data['type_account'] : 0,
+        ]);
+        return $user;
     }
-    
+
 }

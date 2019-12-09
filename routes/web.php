@@ -22,4 +22,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('/getCity', 'LocationController@getListCity');
         $router->post('/getDistrict', 'LocationController@getListDistrict');
     });
+    $router->post('register','RegisterController@register');
+    $router->post('login','LoginController@login');
 });
