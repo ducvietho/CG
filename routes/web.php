@@ -17,4 +17,9 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/import', 'LocationController@import');
     $router->post('/importDistrict', 'LocationController@importDistrict');
+
+    $router->group(['prefix' => 'location'], function () use ($router) {
+        $router->post('/getCity', 'LocationController@getListCity');
+        $router->post('/getDistrict', 'LocationController@getListDistrict');
+    });
 });
