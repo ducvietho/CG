@@ -86,4 +86,13 @@ class UserController extends Controller
         }
         return $this->successResponseMessage($data, $status, $message);
     }
+
+    public function logout(Request $request){
+        $user = User::find(Auth::id());
+        $user->fcm_token = '';
+        $user->save();
+        Auth::logout();
+        $this->jwt->invalidate();
+        return $this->successResponseMessage(new \stdClass(), 200, "Logout success");
+    }
 }
