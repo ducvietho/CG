@@ -59,6 +59,7 @@ $app->singleton('filesystem', function ($app) {
 $app->configure('queue');
 $app->configure('jwt');
 $app->configure('auth');
+$app->configure('contants');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware

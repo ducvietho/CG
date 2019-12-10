@@ -18,10 +18,22 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/import', 'LocationController@import');
     $router->post('/importDistrict', 'LocationController@importDistrict');
 
+    /**
+     * Get list location city, district
+     */
     $router->group(['prefix' => 'location'], function () use ($router) {
         $router->post('/getCity', 'LocationController@getListCity');
         $router->post('/getDistrict', 'LocationController@getListDistrict');
     });
-    $router->post('register','RegisterController@register');
-    $router->post('login','LoginController@login');
+
+    $router->group(['prefix' => 'auth'], function () use ($router) {
+        $router->post('register','RegisterController@register');
+        $router->post('login','LoginController@login');
+    });
+
+    $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
+        $router->group(['prefix' => 'nurse'], function () use ($router) {
+            $router->post('/home', 'NurseController@homePatient');
+        });
+    });
 });
