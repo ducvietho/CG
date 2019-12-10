@@ -22,6 +22,19 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('/getCity', 'LocationController@getListCity');
         $router->post('/getDistrict', 'LocationController@getListDistrict');
     });
+
     $router->post('register','RegisterController@register');
     $router->post('login','LoginController@login');
+    $router->post('findID','UserController@findID');
+    $router->post('forgotPass','UserController@forgotPass');
+
+
+    $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
+        $router->group(['prefix' => 'user'], function () use ($router) {
+            $router->post('/delete','UserController@delete');
+            $router->post('/changePass','UserController@changePass');
+        });
+
+    });
+
 });

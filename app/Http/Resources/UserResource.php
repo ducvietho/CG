@@ -16,12 +16,14 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'user_name' => $this->user_name,
             'email' => $this->email,
-            'address_detail' => $this->address_detail,
+            'address_detail' => ($this->address_detail != null) ? $this->address_detail != null: '',
             'avatar' => $this->avatar,
             'type' => $this->type,
-            'citi_code' => $this->code_address,
+            'city_code' => ($this->code_address != null) ? $this->code_address : '' ,
             'gender' => $this->gender,
             'birthday' => $this->birthday,
+            'district_code' => ($this->district_code != null) ?  $this->district_code : '',
+            'type_account' => $this->type_account
         ];
     }
 }

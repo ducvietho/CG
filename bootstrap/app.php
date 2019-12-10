@@ -1,7 +1,11 @@
 <?php
 
 use App\Providers\AuthServiceProvider;
+use Barryvdh\Queue\AsyncServiceProvider;
+use Illuminate\Contracts\Mail\MailQueue;
 use Illuminate\Filesystem\FilesystemServiceProvider;
+use Illuminate\Mail\Mailer;
+use Illuminate\Mail\MailServiceProvider;
 use Tymon\JWTAuth\Providers\LumenServiceProvider;
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -59,6 +63,10 @@ $app->singleton('filesystem', function ($app) {
 $app->configure('queue');
 $app->configure('jwt');
 $app->configure('auth');
+$app->configure('mail');
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -96,7 +104,9 @@ $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Barryvdh\Queue\AsyncServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
