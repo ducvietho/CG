@@ -55,6 +55,9 @@ class UserController extends Controller
         } else {
             $pass = str_random(6);
             $this->dispatch(new ForgotPassword($pass, $user->email));
+            $password = Hash::make($pass);
+            $user->password = $password;
+            $user->save();
             return $this->successResponseMessage(new \stdClass(), 200, 'Get password success');
         }
 
