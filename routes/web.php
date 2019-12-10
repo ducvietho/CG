@@ -29,11 +29,22 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['prefix' => 'auth'], function () use ($router) {
         $router->post('register','RegisterController@register');
         $router->post('login','LoginController@login');
+        $router->post('findID','UserController@findID');
+        $router->post('forgotPass','UserController@forgotPass');
     });
 
     $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
+        $router->group(['prefix' => 'user'], function () use ($router) {
+            $router->post('/delete','UserController@delete');
+            $router->post('/changePass','UserController@changePass');
+            $router->post('/logout','UserController@logout');
+        });
+
         $router->group(['prefix' => 'nurse'], function () use ($router) {
             $router->post('/home', 'NurseController@homePatient');
         });
+
     });
+
+>>>>>>> dce30c4716766d06a49371e43aa60bc0a7f3d994
 });

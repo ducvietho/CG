@@ -13,7 +13,9 @@
         "league/flysystem-aws-s3-v3": "~1.0",
         "maatwebsite/excel": "^3.1",
         "tymon/jwt-auth": "^1.0.0-beta.3@dev",
-        "vlucas/phpdotenv": "^3.3"
+        "vlucas/phpdotenv": "^3.3",
+        "illuminate/mail": "^5.8",
+        "illuminate/redis": "^5.8"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
