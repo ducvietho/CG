@@ -13,7 +13,7 @@ class DistrictResource extends JsonResource
         return [
             'original_name' => $this->original_name,
             'show_name' => $this->show_name,
-            'code' => $this->code,
+            'code' => $this->code
         ];
     }
 }

@@ -16,7 +16,7 @@ class PatientHomeResource extends JsonResource
     {
         $city_code = substr($this->code_add,0,2);
         $city_name = City::where('code',$city_code)->first();
-        $district = District::where('code',$this->code_add);
+        $district = District::where('code',$this->code_add)->first();
         return [
             'id'=>$this->id,
             'name' => $this->name,
@@ -32,7 +32,7 @@ class PatientHomeResource extends JsonResource
         return date("Y") - $year;
     }
     private function getCare($id_patient){
-        $nures_care_id = Care::where('user_patient',$id_patient)->where('status',2)->pluck('user_nurse');
+        $nures_care_id = Care::where('user_patient',$id_patient)->where('status',1)->pluck('user_nurse');
         $nures_care_name = User::select('name')->where('id',$nures_care_id)->first();
         return ($nures_care_name == null) ? "": $nures_care_name->name;
     }

@@ -14,7 +14,6 @@ class UpdateTableNurseProfile extends Migration
     public function up()
     {
         Schema::table('profile_nurse', function (Blueprint $table) {
-            $table->dropColumn('rate');
             $table->string('code_add',7)->default('0');
         });
     }
