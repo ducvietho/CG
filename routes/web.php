@@ -46,5 +46,5 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     });
 
->>>>>>> dce30c4716766d06a49371e43aa60bc0a7f3d994
+
 });
