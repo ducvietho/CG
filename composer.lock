@@ -4,24 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "33dfa88566aa0ac84fb5503147dd5e60",
-=======
-    "content-hash": "99529283cc1a6719420332f5bf4b79d2",
->>>>>>> dce30c4716766d06a49371e43aa60bc0a7f3d994
+    "content-hash": "2f142ff52d8d81008873f12789b4bed6",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.128.1",
+            "version": "3.128.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b550a939356fb66aadf8f92485b53046e1e60ee4"
+                "reference": "a81485e12b2545aff17134bbf29442037f3fcadb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b550a939356fb66aadf8f92485b53046e1e60ee4",
-                "reference": "b550a939356fb66aadf8f92485b53046e1e60ee4",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a81485e12b2545aff17134bbf29442037f3fcadb",
+                "reference": "a81485e12b2545aff17134bbf29442037f3fcadb",
                 "shasum": ""
             },
             "require": {
@@ -92,7 +88,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-12-09T19:18:49+00:00"
+            "time": "2019-12-10T19:12:09+00:00"
         },
         {
             "name": "barryvdh/laravel-async-queue",
@@ -3551,25 +3547,25 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v4.4.1",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "64acec7e0d67125e9f4656c68d4a38a42ab5a0b7"
+                "reference": "19d29e7098b7b2c3313cb03902ca30f100dcb837"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/64acec7e0d67125e9f4656c68d4a38a42ab5a0b7",
-                "reference": "64acec7e0d67125e9f4656c68d4a38a42ab5a0b7",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/19d29e7098b7b2c3313cb03902ca30f100dcb837",
+                "reference": "19d29e7098b7b2c3313cb03902ca30f100dcb837",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1.3"
+                "php": "^7.2.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.4-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -3600,7 +3596,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2019-10-12T00:35:04+00:00"
+            "time": "2019-11-18T17:27:11+00:00"
         },
         {
             "name": "symfony/debug",

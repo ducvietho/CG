@@ -33,4 +33,20 @@ class NurseController extends Controller
     /**
      * Get patient detail
      */
+    /** 
+     * Function register nurse
+    */
+    public function registerNurse(Request $request){
+        //validate input
+        $this->validate($request,[
+            'code_add'=>'required',
+            'start_date'=>'requeired',
+            'end_date'=>'required',
+            'start_time'=>'required',
+            'end_time'=>'required',
+            'address'=>'required|min:1|max:3',
+            'is_certificate'=>'required|min:0|max:1',
+            'description'=>'string'
+        ]);
+    }
 }

@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'gender' => $this->gender,
             'birthday' => $this->birthday,
             'district_code' => ($this->district_code != null) ?  $this->district_code : '',
-            'type_account' => $this->type_account
+            'type_account' => $this->type_account,
         ];
     }
 }

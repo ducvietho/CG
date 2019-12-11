@@ -39,12 +39,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/changePass','UserController@changePass');
             $router->post('/logout','UserController@logout');
         });
-
         $router->group(['prefix' => 'nurse'], function () use ($router) {
             $router->post('/home', 'NurseController@homePatient');
+            $router->post('/profile', 'NurseController@homePatient');
         });
 
     });
-
->>>>>>> dce30c4716766d06a49371e43aa60bc0a7f3d994
 });
