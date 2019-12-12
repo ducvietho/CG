@@ -46,4 +46,27 @@ class RegisterController extends Controller
         $data['user'] = new UserResource($user);
         return $this->successResponseMessage($data,200,'Register success');
     }
+
+    public function registerSocial(Request $request){
+        $this->validate($request, [
+            'email' => 'required|string|email|max:255|unique:users',
+            'provide_id' => 'required',
+            'name' => 'required',
+            'user_name' => 'required',
+            'gender' => 'required',
+            'birthday' => 'required',
+            'phone' => 'required|min:10',
+        ]);
+        $request->request->set('user_id','');
+        $request->request->set('password','');
+        $user = User::createNew($request->all());
+        if($request->avatar != null){
+            $avatar = $this->upload(0,$request->avatar,$user->id);
+            $user->avatar = $avatar;
+            $user->save();
+        }
+        $data['token'] = $this->jwt->fromUser($user);
+        $data['user'] = new UserResource($user);
+        return $this->successResponseMessage($data,200,'Register social success');
+    }
 }

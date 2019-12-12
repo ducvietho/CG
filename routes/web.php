@@ -28,7 +28,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['prefix' => 'auth'], function () use ($router) {
         $router->post('register','RegisterController@register');
+        $router->post('registerSocial','RegisterController@registerSocial');
         $router->post('login','LoginController@login');
+        $router->post('loginSocial','LoginController@loginSocial');
         $router->post('findID','UserController@findID');
         $router->post('forgotPass','UserController@forgotPass');
     });
@@ -45,6 +47,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/interest', 'NurseController@interest');
             $router->post('/suggest', 'NurseController@registerNurse');
             $router->post('/manager', 'NurseController@manager');
+        });
+        $router->group(['prefix' => 'patient'], function () use ($router) {
+            $router->post('/create', 'PatientController@create');
+            $router->post('/delete', 'PatientController@delete');
+            $router->post('/getList', 'PatientController@getList');
         });
 
     });
