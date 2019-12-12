@@ -10,5 +10,8 @@ return [
         'naver'=>1,
         'google'=>2,
         'kakaotalk'=>3
+    ],
+    'interest'=>[
+        'interested'=>1
     ]
 ];

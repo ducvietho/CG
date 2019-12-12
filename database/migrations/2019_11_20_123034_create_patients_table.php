@@ -20,7 +20,7 @@ class CreatePatientsTable extends Migration
             $table->string('name');
             $table->integer('gender')->default(0);
             $table->integer('birthday');
-            $table->integer('code_add');
+            $table->string('code_add',11);
             $table->bigInteger('start_date');
             $table->bigInteger('end_date');
             $table->integer('start_time');
