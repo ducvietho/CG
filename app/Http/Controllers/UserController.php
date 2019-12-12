@@ -25,7 +25,7 @@ class UserController extends Controller
     public function findID(Request $request)
     {
         $email = $request->email;
-        $user = User::where('email', $email)->where('type_account', 0)->first();
+        $user = User::where('email', $email)->first();
         if ($user == null) {
             return $this->successResponseMessage(new \stdClass(), 404, 'Not found user');
         } else {
@@ -49,7 +49,7 @@ class UserController extends Controller
     {
         $userId = $request->user_id;
         $email = $request->email;
-        $user = User::where('user_id', $userId)->where('type_account', 0)->first();
+        $user = User::where('user_id', $userId)->first();
         if ($user == null) {
             return $this->successResponseMessage(new \stdClass(), 404, 'Not found user');
         } else {
