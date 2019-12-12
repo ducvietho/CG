@@ -35,7 +35,6 @@ class LoginController extends Controller
             if ($token == false) {
                 return $this->successResponseMessage(new \stdClass(), 413, "Password inccorect");
             } else {
-                $user = User::where('user_id', $request->user_id)->where('type_account', 0)->first();
                 if (isset($request->fcm_token)) {
                     $user->update([
                         'fcm_token' => $request->fcm_token,
@@ -45,8 +44,12 @@ class LoginController extends Controller
                 }
                 $data['token'] = $token;
                 $data['user'] = new UserResource($user);
-
-                return $this->successResponseMessage($data, 200, "Login success");
+                if ($user->is_register == 0) {
+                    $code = 412;
+                } else {
+                    $code = 200;
+                }
+                return $this->successResponseMessage($data, $code, "Login success");
             }
 
         }
@@ -68,8 +71,12 @@ class LoginController extends Controller
             }
             $data['token'] = $token;
             $data['user'] = new UserResource($user);
-
-            return $this->successResponseMessage($data, 200, "Login success");
+            if ($user->is_register == 0) {
+                $code = 412;
+            } else {
+                $code = 200;
+            }
+            return $this->successResponseMessage($data, $code, "Login success");
         }
 
     }
