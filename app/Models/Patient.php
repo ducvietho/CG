@@ -44,6 +44,19 @@ class Patient extends Model
     /**
      * End relationship
      */
-
+    function getScoreAttribute()
+    {
+        $code_add = Auth::user()->district_code;
+        $city_code = substr($code_add,0,2);
+        if($this->code_add == $code_add){
+            return 2;
+        }else{
+            if(substr($this->code_add,0,2) == $city_code){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
 
 }

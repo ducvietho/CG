@@ -3,9 +3,10 @@
 
 namespace App\Http\Resources;
 
-
+use Auth;
 use App\Models\City;
 use App\Models\District;
+use App\Models\NurseInterest;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 
@@ -30,10 +31,15 @@ class PatientResource extends JsonResource
             'end_time' => $this->end_time,
             'address' => $this->address,
             'note' => ($this->note != null) ? $this->note : '',
-            'is_certificate' => $this->is_certificate
+            'is_certificate' => $this->is_certificate,
+            'is_interest'=>$this->is_interest($this->id,Auth::id())
         ];
     }
     private function age($year){
         return date("Y") - $year;
+    }
+    private function is_interest($id_nures, $id_login){
+        $record = NurseInterest::where('user_patient',$id_nures)->where('user_nurse',$id_login)->first();
+        return ($record == null)?0:1;
     }
 }

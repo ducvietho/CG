@@ -1,21 +1,19 @@
 <?php
-
-
 namespace App\Http\Controllers;
 
-
-use App\Http\Resources\PatientCollection;
-use App\Http\Resources\PatientListCollection;
-use App\Http\Resources\PatientResource;
+use Auth;
+use App\User;
 use App\Models\Patient;
 use App\Traits\ApiResponser;
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\PatientResource;
+use App\Http\Resources\PatientCollection;
+use App\Http\Resources\PatientListCollection;
 
 class PatientController extends Controller
 {
     use ApiResponser;
+
     public function create(Request $request)
     {
         $this->validate($request, [
