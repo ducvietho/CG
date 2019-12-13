@@ -11,10 +11,10 @@ class Patient extends Model
     use FullTextSearch;
 
     protected $table = 'patients';
-    protected $fillable = ['relationship', 'user_login', 'name','gender','birthday','city_code','start_date','end_date','start_time','end_time','address','note','district_code'];
+    protected $fillable = ['relationship', 'user_login', 'name','gender','birthday','code_add','start_date','end_date','start_time','end_time','address','note','is_certificate'];
 
     protected $searchable = [
-        'city_code'
+        'code_add'
     ];  
 
     public static function createPatient($data){
@@ -24,13 +24,13 @@ class Patient extends Model
             'relationship' => $data['relationship'],
             'gender' => $data['gender'],
             'birthday' => $data['birthday'],
-            'city_code' => $data['city_code'],
-            'district_code' => $data['district_code'],
+            'code_add' => $data['code_add'],
             'start_date' => $data['start_date'],
             'end_date' => $data['end_date'],
             'start_time' => $data['start_time'],
             'end_time' => $data['end_time'],
             'address' => $data['address'],
+            'is_certificate' => $data['is_certificate'],
             'note' => isset($data['note']) ? $data['note'] : ''
 
         ]);
@@ -45,12 +45,5 @@ class Patient extends Model
      * End relationship
      */
 
-    public function city(){
-        return $this->belongsTo(City::class,'city_code','code');
-    }
-
-    public function district(){
-        return $this->belongsTo(District::class,'district_code','code');
-    }
 
 }

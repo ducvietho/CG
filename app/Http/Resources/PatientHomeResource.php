@@ -19,7 +19,7 @@ class PatientHomeResource extends JsonResource
         return [
             'id'=>$this->id,
             'name' => $this->name,
-            'city_name' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
+            'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'age'=>$this->age($this->birthday),
             'is_interest'=>$this->is_interest(Auth::id(),$this->id),

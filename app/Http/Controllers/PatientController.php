@@ -23,13 +23,13 @@ class PatientController extends Controller
             'relationship' => 'required',
             'gender' => 'required',
             'birthday' => 'required',
-            'city_code' => 'required',
-            'district_code' => 'required',
+            'code_add' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
             'end_time' => 'required',
             'start_time' => 'required',
             'address' => 'required',
+            'is_certificate'=>'required|min:0|max:1',
         ]);
         $patient = Patient::createPatient($request->all());
         $user = User::find(Auth::id());
