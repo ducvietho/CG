@@ -31,7 +31,7 @@ class NurseController extends Controller
      */
     public function homePatient(Request $request){
         $code_add = Auth::user()->district_code;
-        $data = Patient::search('code_add',$code_add)->paginate();
+        $data = Patient::search('district_code',$code_add)->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get home success");
     }
     /**
