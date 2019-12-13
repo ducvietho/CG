@@ -34,7 +34,7 @@ class NurseController extends Controller
     public function homePatient(Request $request){
         $code_add = Auth::user()->district_code;
         $data = DB::table('patients')
-        ->orderByRaw("(code_add - $code_add) asc")
+        ->orderByRaw("(abs(code_add - $code_add)) asc")
         ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get home success");
     }
