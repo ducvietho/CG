@@ -31,7 +31,7 @@ class NurseController extends Controller
      */
     public function homePatient(Request $request){
         $code_add = Auth::user()->district_code;
-        $data = Patient::search('district_code',$code_add)->paginate();
+        $data = Patient::search($code_add)->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get home success");
     }
     /**
@@ -71,7 +71,7 @@ class NurseController extends Controller
 
         $code_add = Auth::user()->district_code;
 
-        $data = Patient::search('code_add',$code_add)->whereNotIn('id',$user_id)->paginate();
+        $data = Patient::search($code_add)->whereNotIn('id',$user_id)->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get tab suggest success");
     }
     /**
@@ -80,7 +80,7 @@ class NurseController extends Controller
     public function interest(Request $request){
         $user_id = NurseInterest::where('user_nurse',Auth::id())->pluck('user_patient');
         $code_add = Auth::user()->district_code;
-        $data = Patient::search('code_add',$code_add)->whereIn('id',$user_id)->paginate();
+        $data = Patient::search($code_add)->whereIn('id',$user_id)->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get interest success");
     }
     public function manager(Request $request){
@@ -94,7 +94,7 @@ class NurseController extends Controller
                             ->where('user_login',Auth::id())
                             ->pluck('user_patient');
         $code_add = Auth::user()->district_code;
-        $data = Patient::search('code_add',$code_add)->whereIn('id',$user_patient)->paginate();
+        $data = Patient::search($code_add)->whereIn('id',$user_patient)->paginate();
         $result = [
             'number_request'=>$number_request,
             'data'=>new PatientCollection($data)
