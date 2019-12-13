@@ -3,6 +3,9 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Care;
+use App\Models\NurseInterest;
+use App\User;
 use Auth;
 use App\Models\City;
 use App\Models\District;
@@ -19,7 +22,7 @@ class PatientHomeResource extends JsonResource
         return [
             'id'=>$this->id,
             'name' => $this->name,
-            'city_name' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
+            'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'age'=>$this->age($this->birthday),
             'is_interest'=>$this->is_interest(Auth::id(),$this->id),
@@ -32,7 +35,10 @@ class PatientHomeResource extends JsonResource
     }
     private function getCare($id_patient){
         $nures_care_id = Care::where('user_patient',$id_patient)->where('status',1)->pluck('user_nurse');
-        $nures_care_name = User::select('name')->where('id',$nures_care_id)->first();
+        $nures_care_name = null;
+        if(sizeof($nures_care_id)>0){
+            $nures_care_name = User::select('name')->where('id',$nures_care_id[0])->first();
+        }
         return ($nures_care_name == null) ? "": $nures_care_name->name;
     }
 
