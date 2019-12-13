@@ -56,7 +56,7 @@ class NurseController extends Controller
         $request->request->add(['user_login' => Auth::id()]);
         //Update status register user
         $user = Auth::user();
-        // $user->is_register = 1;
+        $user->is_register = 1;
         $user->save();
         //end
         $nurse_profile = NurseProfile::firstOrCreate($request->all());
