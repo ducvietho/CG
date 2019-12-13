@@ -47,11 +47,17 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/interest', 'NurseController@interest');
             $router->post('/suggest', 'NurseController@registerNurse');
             $router->post('/manager', 'NurseController@manager');
+            $router->post('/detail', 'NurseController@detail');
         });
         $router->group(['prefix' => 'patient'], function () use ($router) {
             $router->post('/create', 'PatientController@create');
             $router->post('/delete', 'PatientController@delete');
             $router->post('/getList', 'PatientController@getList');
+            $router->post('/home', 'PatientController@homePatient');
+            $router->post('/interest/list', 'PatientController@interest');
+            $router->post('/interest/action', 'PatientController@interestAction');
+            $router->post('/detail', 'PatientController@detail');
+
         });
 
     });

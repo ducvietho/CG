@@ -35,7 +35,7 @@ class NurseProfileDetailResource extends JsonResource
             'is_certificate'=>(int)$this->is_certificate,
             'description'=>$this->description,
             'rate'=>(float)($user_login->rate == null)?0:$user_login->rate,
-            'city_name' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
+            'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'age'=>$this->age($user_login->birthday),
             'is_interest'=>$this->is_interest($this->id,Auth::id())

@@ -115,10 +115,14 @@ class NurseController extends Controller
         }
         return $this->successResponseMessage(new \stdClass(), 200, $messeage);
     }
+
     /**
-     * Function get detail patient
+     * Function get detail nurse
      */
-    public function detailPatient(Request $request){
-        
+    public function detail(Request $request){
+        $nurseId = $request->id;
+        $nurse = NurseProfile::find($nurseId);
+        return $this->successResponseMessage(new NurseProfileDetailResource($nurse), 200, 'Get detail nurse success');
     }
+
 }

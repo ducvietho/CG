@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class NurseProfile extends Model
@@ -17,4 +18,7 @@ class NurseProfile extends Model
     /**
      * End relationship
      */
+    public function user(){
+        return $this->belongsTo(User::class,'user_login','id');
+    }
 }
