@@ -17,8 +17,9 @@ class PatientHomeResource extends JsonResource
     
     public function toArray($request)
     {
-        $city_name = City::where('code',$this->city_code)->first();
-        $district = District::where('code',$this->district_code)->first();
+        $city_code = substr($this->code_add,0,2);
+        $city_name = City::where('code',$city_code)->first();
+        $district = District::where('code',$this->code_add)->first();
         return [
             'id'=>$this->id,
             'name' => $this->name,

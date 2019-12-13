@@ -9,6 +9,8 @@ use App\Models\NurseProfile;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use App\Models\NurseInterest;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\PatientResource;
 use App\Http\Resources\PatientCollection;
 use App\Http\Resources\NurseProfileDetailResource;
 
@@ -31,7 +33,9 @@ class NurseController extends Controller
      */
     public function homePatient(Request $request){
         $code_add = Auth::user()->district_code;
-        $data = Patient::search($code_add)->paginate();
+        $data = DB::table('patients')
+        ->orderByRaw("(code_add - $code_add) asc")
+        ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get home success");
     }
     /**

@@ -33,14 +33,14 @@ class PatientResource extends JsonResource
             'address' => $this->address,
             'note' => ($this->note != null) ? $this->note : '',
             'is_certificate' => $this->is_certificate,
-            'is_interest' => $this->is_interest(Auth::id(),$this->id)
+            'is_interest'=>$this->is_interest($this->id,Auth::id())
         ];
     }
     private function age($year){
         return date("Y") - $year;
     }
-    private function is_interest($id_nures, $id_patient){
-        $record = NurseInterest::where('user_nurse',$id_nures)->where('user_patient',$id_patient)->first();
+    private function is_interest($id_nures, $id_login){
+        $record = NurseInterest::where('user_patient',$id_nures)->where('user_nurse',$id_login)->first();
         return ($record == null)?0:1;
     }
 }
