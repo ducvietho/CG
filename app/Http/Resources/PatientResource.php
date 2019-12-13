@@ -3,11 +3,12 @@
 
 namespace App\Http\Resources;
 
-use Auth;
+
 use App\Models\City;
 use App\Models\District;
 use App\Models\NurseInterest;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 
 class PatientResource extends JsonResource
