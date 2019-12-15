@@ -16,4 +16,10 @@ class Care extends Model
     /**
      * End relationship
      */
+    public function nurse(){
+        return $this->belongsTo(NurseProfile::class,'user_nurse','id');
+    }
+    public function patient(){
+        return $this->belongsTo(Patient::class,'user_patient','id');
+    }
 }

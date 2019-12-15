@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Jobs\ForgotPassword;
 use App\Traits\ApiResponser;
+use App\Traits\MediaClass;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,9 @@ use Tymon\JWTAuth\JWTAuth;
 class UserController extends Controller
 {
     use ApiResponser;
+    use MediaClass;
     protected $jwt;
+
     public function __construct(JWTAuth $jwt)
     {
         $this->jwt = $jwt;
@@ -87,12 +90,46 @@ class UserController extends Controller
         return $this->successResponseMessage($data, $status, $message);
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         $user = User::find(Auth::id());
         $user->fcm_token = '';
         $user->save();
         Auth::logout();
         $this->jwt->invalidate();
         return $this->successResponseMessage(new \stdClass(), 200, "Logout success");
+    }
+
+    public function editProfile(Request $request)
+    {
+        $user = User::find(Auth::id());
+        $avatar = $user->avatar;
+        if (isset($request->avatar) && $request->avatar != null) {
+            $avatar = $this->upload(0, $request->avatar, Auth::id());
+        }
+        $user->avatar = $avatar;
+        $user->name = isset($request->name) ? $request->name : $user->name;
+        $user->user_name = isset($request->user_name) ? $request->user_name : $user->user_name;
+        $user->gender = isset($request->gender) ? $request->gender : $user->gender;
+        $user->birthday = isset($request->birthday) ? $request->birthday : $user->birthday;
+        $user->phone = isset($request->phone) ? $request->phone : $user->phone;
+        $user->email = isset($request->email) ? $request->email : $user->email;
+        $user->code_address = isset($request->city_code) ? $request->city_code : $user->code_address;
+        $user->district_code = isset($request->district_code) ? $request->district_code : $user->district_code;
+        $user->address_detail = isset($request->address) ? $request->address : $user->address_detail;
+        $user->save();
+        return $this->successResponseMessage(new UserResource($user), 200, 'Edit profile success');
+    }
+    /*
+     * Turn on/off care
+     */
+    public function settingCare(Request $request)
+    {
+        $user = User::find(Auth::id());
+        $settingCare = $request->setting_care;
+        $settingCare = ($settingCare == 0) ? 1 : 0;
+        $user->setting_care = $settingCare;
+        $user->save();
+        return $this->successResponseMessage(new UserResource($user), 200, 'Setting care success');
     }
 }

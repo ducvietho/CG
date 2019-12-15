@@ -4,10 +4,12 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\NurseCareCollection;
 use App\Http\Resources\NurseHomeCollection;
 use App\Http\Resources\PatientCollection;
 use App\Http\Resources\PatientListCollection;
 use App\Http\Resources\PatientResource;
+use App\Models\Care;
 use App\Models\NurseProfile;
 use App\Models\Patient;
 use App\Models\PatientInterest;
@@ -45,6 +47,21 @@ class PatientController extends Controller
 
     public function update(Request $request)
     {
+        $patient = Patient::findOrFail($request->id);
+        $name = isset($request->name) ? $request->name : $patient->name;
+        $relationship = isset($request->relationship) ? $request->relationship : $patient->relationship;
+        $gender = isset($request->gender) ? $request->gender : $patient->gender;
+        $birthday = isset($request->birthday) ? $request->birthday : $patient->birthday;
+        $code_add = isset($request->code_add) ? $request->code_add : $patient->code_add;
+        $start_date = isset($request->start_date) ? $request->start_date : $patient->start_date;
+        $end_date = isset($request->end_date) ? $request->end_date : $patient->end_date;
+        $end_time = isset($request->end_time) ? $request->end_time : $patient->end_time;
+        $start_time = isset($request->start_time) ? $request->start_time : $patient->start_time;
+        $address = isset($request->address) ? $request->address : $patient->address;
+        $is_certificate = isset($request->is_certificate) ? $request->is_certificate : $patient->is_certificate;
+        $note = isset($request->note) ? $request->note : $patient->note;
+        $patient = Patient::updatePatient($request->id, $name, $relationship, $gender, $birthday, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note);
+        return $this->successResponseMessage(new PatientResource($patient), 200, 'Update patient success');
 
     }
 
@@ -93,12 +110,31 @@ class PatientController extends Controller
         }
 
     }
+
     /**
      * Function get detail patient
      */
-    public function detail(Request $request){
+    public function detail(Request $request)
+    {
         $patient = Patient::find($request->id);
-        return $this->successResponseMessage(new PatientResource($patient),200,'Get patient detail success');
+        return $this->successResponseMessage(new PatientResource($patient), 200, 'Get patient detail success');
 
     }
+
+    public function suggest(Request $request)
+    {
+        $codeAdd = Auth::user()->district_code;
+        $nurseIds = Care::where('user_login', Auth::id())->where('status', '!=', 0)->pluck('user_nurse')->toArray();
+        $nurseSuggest = NurseProfile::whereNotIn('id', $nurseIds)->orderByRaw("(abs(code_add - $codeAdd)) asc")->orderBy('rate', 'DESC')->paginate();
+        return $this->successResponseMessage(new NurseHomeCollection($nurseSuggest), 200, 'Get nurse suggest success');
+    }
+
+    public function manage(Request $request)
+    {
+        $status = isset($request->status) ? $request->status : 1;
+        $nurseCare = Care::where('status',$status)->where('user_login',Auth::id())->paginate();
+        return $this->successResponseMessage(new NurseCareCollection($nurseCare),200,'Get nurse care success');
+    }
+
+
 }

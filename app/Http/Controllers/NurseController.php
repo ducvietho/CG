@@ -129,4 +129,11 @@ class NurseController extends Controller
         return $this->successResponseMessage(new NurseProfileDetailResource($nurse), 200, 'Get detail nurse success');
     }
 
+    /*
+     * Search nurse
+     */
+    public function searchNurse(){
+
+    }
+
 }
