@@ -135,6 +135,13 @@ class PatientController extends Controller
         $nurseCare = Care::where('status',$status)->where('user_login',Auth::id())->paginate();
         return $this->successResponseMessage(new NurseCareCollection($nurseCare),200,'Get nurse care success');
     }
-
-
+    /**
+     *Function search detail
+     */
+    public function searchPatient(Request $request){
+        //Validate input searching
+        $this->validate($request,[
+            'name'=>'string',
+        ]);
+    }
 }

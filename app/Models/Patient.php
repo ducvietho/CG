@@ -64,19 +64,21 @@ class Patient extends Model
     /**
      * End relationship
      */
-    function getScoreAttribute()
+    /**Searching by name */
+    public function scopeName($query,$name)
     {
-        $code_add = Auth::user()->district_code;
-        $city_code = substr($code_add, 0, 2);
-        if ($this->code_add == $code_add) {
-            return 2;
-        } else {
-            if (substr($this->code_add, 0, 2) == $city_code) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
+        return $query->where('name', 'like', '%'.$name.'%');
     }
-
+    /**
+     * Searching by user name
+     */
+    public function scopeGender($query, $gender){
+        return $query->where('gender', $gender);
+    }
+    /**
+     * Searching by date time
+     */
+    public function scopeDate($query, $start_date, $end_date){
+        
+    }
 }
