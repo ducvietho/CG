@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use App\Models\Care;
-use App\Models\Patient;
-use App\Models\NurseProfile;
-use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
-use App\Models\NurseInterest;
-use Illuminate\Support\Facades\DB;
-use App\Http\Resources\PatientResource;
-use App\Http\Resources\PatientCollection;
+use App\Http\Resources\NurseHomeCollection;
 use App\Http\Resources\NurseProfileDetailResource;
+use App\Http\Resources\PatientCollection;
+use App\Models\Care;
+use App\Models\NurseInterest;
+use App\Models\NurseProfile;
+use App\Models\Patient;
+use App\Traits\ApiResponser;
+use Auth;
+use Elasticquent\ElasticquentResultCollection;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class NurseController extends Controller
 {
@@ -64,6 +65,11 @@ class NurseController extends Controller
         $user->save();
         //end
         $nurse_profile = NurseProfile::firstOrCreate($request->all());
+        $nurse_profile->name = $nurse_profile->user->name;
+        $nurse_profile->user_name = $nurse_profile->user->user_name;
+        $nurse_profile->birthday = $nurse_profile->user->birthday;
+        $nurse_profile->gender = $nurse_profile->user->gender;
+        $nurse_profile->addToIndex();
         return $this->successResponseMessage(new NurseProfileDetailResource($nurse_profile), 200, "Register nurse profile success");
     }
     /** 
@@ -132,7 +138,88 @@ class NurseController extends Controller
     /*
      * Search nurse
      */
-    public function searchNurse(){
+    public function seagchNurse(Request $request){
+        $page = (isset($request->page)) ? $request->page : 1;
+        $paginate = 15;
+        $name = $request->name;
+        $gender = $request->gender;
+        $birthday = $request->birthday;
+        $code_add  = $request->code_add;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $start_time = $request->start_time;
+        $end_time = $request->end_time;
+        $adddress = $request->address;
+        $is_certificate = $request->is_certificate;
+        $offset = ($page - 1) * $paginate;
+        $name = trim($name, ' ');
+        $array_content = explode(' ', $name);
+        if(sizeof($array_content) > 1){
+            $result = NurseProfile::searchByQuery(array('bool' => array('must' =>array(
+                array('match_phrase_prefix' => array('name' => $name)),
+                array('match_phrase_prefix' => array('birthday' => $birthday)),
+                array('match_phrase_prefix' => array('birthday' => $birthday)),
+                array('match_phrase_prefix' => array('gender' => $gender)),
+                array('match_phrase_prefix' => array('address' => $adddress)),
+                array('match_phrase_prefix' => array('code_add' => $code_add)),
+                array('match_phrase_prefix' => array('is_certificate' => $is_certificate)),
+                array('range' => array('start_date'=>array('gte'=>$start_date))),
+                array('range' => array('end_date'=>array('lte'=>$end_date))),
+                array('range' => array('start_time'=>array('gte'=>$start_time))),
+                array('range' => array('end_time'=>array('lte'=>$end_time)))))),
+                null, null, $paginate, $offset, array('id' => array('order' => 'desc')));
+            if (($result->totalHits()) == 0) {
+                $result = NurseProfile::searchByQuery(array('bool' => array('must' =>array(
+                    array('match' => array('content_rep' => array('query' => $name, 'operator' => 'and'))),
+                    array('match_phrase_prefix' => array('birthday' => $birthday)),
+                    array('match_phrase_prefix' => array('birthday' => $birthday)),
+                    array('match_phrase_prefix' => array('gender' => $gender)),
+                    array('match_phrase_prefix' => array('address' => $adddress)),
+                    array('match_phrase_prefix' => array('code_add' => $code_add)),
+                    array('match_phrase_prefix' => array('is_certificate' => $is_certificate)),
+                    array('range' => array('start_date'=>array('gte'=>$start_date))),
+                    array('range' => array('end_date'=>array('lte'=>$end_date))),
+                    array('range' => array('start_time'=>array('gte'=>$start_time))),
+                    array('range' => array('end_time'=>array('lte'=>$end_time)))))),
+                    null, null, $paginate, $offset, array('id' => array('order' => 'desc')));
+            }
+        }else{
+            $result = NurseProfile::searchByQuery(array('bool' => array('must' =>array(
+                array('match_phrase_prefix' => array('name' => $name)),
+                array('match_phrase_prefix' => array('birthday' => $birthday)),
+                array('match_phrase_prefix' => array('birthday' => $birthday)),
+                array('match_phrase_prefix' => array('gender' => $gender)),
+                array('match_phrase_prefix' => array('address' => $adddress)),
+                array('match_phrase_prefix' => array('code_add' => $code_add)),
+                array('match_phrase_prefix' => array('is_certificate' => $is_certificate)),
+                array('range' => array('start_date'=>array('gte'=>$start_date))),
+                array('range' => array('end_date'=>array('lte'=>$end_date))),
+                array('range' => array('start_time'=>array('gte'=>$start_time))),
+                array('range' => array('end_time'=>array('lte'=>$end_time)))))),
+                null, null, $paginate, $offset, array('id' => array('order' => 'desc')));
+            if (($result->totalHits()) == 0) {
+                $result = NurseProfile::searchByQuery(array('bool' => array('must' =>array(
+                    array('wildcard' => array('name' => $name . '*')),
+                    array('match_phrase_prefix' => array('birthday' => $birthday)),
+                    array('match_phrase_prefix' => array('birthday' => $birthday)),
+                    array('match_phrase_prefix' => array('gender' => $gender)),
+                    array('match_phrase_prefix' => array('address' => $adddress)),
+                    array('match_phrase_prefix' => array('code_add' => $code_add)),
+                    array('match_phrase_prefix' => array('is_certificate' => $is_certificate)),
+                    array('range' => array('start_date'=>array('gte'=>$start_date))),
+                    array('range' => array('end_date'=>array('lte'=>$end_date))),
+                    array('range' => array('start_time'=>array('gte'=>$start_time))),
+                    array('range' => array('end_time'=>array('lte'=>$end_time)))))),
+                    null, null, $paginate, $offset, array('id' => array('order' => 'desc')));
+            }
+        }
+        $collection = (new ElasticquentResultCollection($result))->paginate();
+        return response()->json([
+            'status' => 200,
+            'action' => 'searchFeed',
+            'data' => new NurseHomeCollection($collection)
+
+        ]);
 
     }
 
