@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use ErrorException;
+use InvalidArgumentException;
 use App\Traits\ApiResponser;
 use Illuminate\Database\QueryException;
 use Tymon\JWTAuth\Exceptions\JWTException;
