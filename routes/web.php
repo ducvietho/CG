@@ -52,7 +52,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/detail', 'NurseController@detail');
             $router->post('search','NurseController@searchPatient');
             $router->post('/nureInterestAction', 'NurseController@nureInterestAction');
-            $router->post('/search', 'NurseController@searchNurse');
         });
         $router->group(['prefix' => 'patient'], function () use ($router) {
             $router->post('/create', 'PatientController@create');
@@ -65,7 +64,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/suggest', 'PatientController@suggest');
             $router->post('/update', 'PatientController@update');
             $router->post('/manager', 'PatientController@manage');
-            $router->post('search','NurseController@seagchNurse');
+            $router->post('/search', 'NurseController@searchNurse');
 
         });
 
