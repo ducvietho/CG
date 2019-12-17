@@ -6,9 +6,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Jobs\ForgotPassword;
+use App\Models\NurseProfile;
+use App\Models\Patient;
 use App\Traits\ApiResponser;
 use App\Traits\MediaClass;
 use App\User;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -42,6 +45,15 @@ class UserController extends Controller
         $user = User::find($userId);
         if ($user->email == $request->email) {
             $user->delete();
+            Patient::where('user_login')->delete();
+            $nurse = NurseProfile::where('user_login')->first();
+            $client = ClientBuilder::create()->build();
+            $params = [
+                'index' => 'care_nurse_index',
+                'type' => 'profile_nurse',
+                'id' => $nurse->id
+            ];
+            $result = $client->delete($params);
             return $this->successResponseMessage(new \stdClass(), 200, 'Delete user success');
         } else {
             return $this->successResponseMessage(new \stdClass(), 413, 'Email incorrect');

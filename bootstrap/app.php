@@ -65,6 +65,7 @@ $app->configure('jwt');
 $app->configure('auth');
 $app->configure('contants');
 $app->configure('mail');
+$app->configure('elasticquent');
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
@@ -108,6 +109,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Barryvdh\Queue\AsyncServiceProvider::class);
+$app->register(Elasticquent\ElasticquentServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
