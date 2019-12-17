@@ -46,14 +46,7 @@ class UserController extends Controller
         if ($user->email == $request->email) {
             $user->delete();
             Patient::where('user_login')->delete();
-            $nurse = NurseProfile::where('user_login')->first();
-            $client = ClientBuilder::create()->build();
-            $params = [
-                'index' => 'care_nurse_index',
-                'type' => 'profile_nurse',
-                'id' => $nurse->id
-            ];
-            $result = $client->delete($params);
+            $nurse = NurseProfile::where('user_login')->delete();
             return $this->successResponseMessage(new \stdClass(), 200, 'Delete user success');
         } else {
             return $this->successResponseMessage(new \stdClass(), 413, 'Email incorrect');
