@@ -64,6 +64,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/suggest', 'PatientController@suggest');
             $router->post('/update', 'PatientController@update');
             $router->post('/manager', 'PatientController@manage');
+            $router->post('search','NurseController@seagchNurse');
 
         });
 
