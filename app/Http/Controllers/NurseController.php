@@ -10,6 +10,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use App\Models\NurseInterest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 use App\Http\Resources\PatientResource;
 use App\Http\Resources\PatientCollection;
 use App\Http\Resources\NurseProfileDetailResource;
@@ -32,9 +33,9 @@ class NurseController extends Controller
      * List orderby location code
      */
     public function homePatient(Request $request){
-        $code_add = Auth::user()->district_code;
+        $code_add = NurseProfile::select('code_add')->where('user_login',Auth::id())->first();
         $data = DB::table('patients')
-        ->orderByRaw("(abs(code_add - $code_add)) asc")
+        ->orderByRaw("(abs(code_add - $code_add->code_add)) asc")
         ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get home success");
     }
@@ -54,9 +55,9 @@ class NurseController extends Controller
             'address'=>'required|min:1|max:3',
             'is_certificate'=>'required|min:0|max:1',
             'description'=>'string',
-            'nationality'=>'required'
+            'nationality'=>'required',
+            'code_add'=>'required'
         ]);
-        $request->request->add(['code_add' => Auth::user()->district_code]);
         $request->request->add(['user_login' => Auth::id()]);
         //Update status register user
         $user = Auth::user();
@@ -73,9 +74,11 @@ class NurseController extends Controller
         // Lay patient da duoc cham soc
         $user_id = NurseInterest::pluck('user_patient');
 
-        $code_add = Auth::user()->district_code;
+        $code_add = NurseProfile::select('code_add')->where('user_login',Auth::id())->first();
 
-        $data = Patient::search($code_add)->whereNotIn('id',$user_id)->paginate();
+        $data = Patient::where('code_add',$code_add->code_add)
+                        ->whereNotIn('id',$user_id)
+                        ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get tab suggest success");
     }
     /**
@@ -83,22 +86,18 @@ class NurseController extends Controller
      */
     public function interest(Request $request){
         $user_id = NurseInterest::where('user_nurse',Auth::id())->pluck('user_patient');
-        $code_add = Auth::user()->district_code;
-        $data = Patient::search($code_add)->whereIn('id',$user_id)->paginate();
+        
+        $data = Patient::whereIn('id',$user_id)->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get interest success");
     }
     public function manager(Request $request){
-        $number_request = Care::where('type',2)
-                        ->where('user_nurse',Auth::id())
-                        ->where('user_login',Auth::id())
-                        ->count();
         $status = $request->status;
         $user_patient = Care::where('status',$status)
                             ->where('user_nurse',Auth::id())
                             ->where('user_login',Auth::id())
                             ->pluck('user_patient');
-        $code_add = Auth::user()->district_code;
-        $data = Patient::search($code_add)->whereIn('id',$user_patient)->paginate();
+        
+        $data = Patient::whereIn('id',$user_patient)->paginate();
         $result = [
             'number_request'=>$number_request,
             'data'=>new PatientCollection($data)
@@ -129,11 +128,48 @@ class NurseController extends Controller
         return $this->successResponseMessage(new NurseProfileDetailResource($nurse), 200, 'Get detail nurse success');
     }
 
-    /*
-     * Search nurse
+    /**
+     *Function search detail
      */
-    public function searchNurse(){
-
+    public function searchPatient(Request $request){
+        //Validate input searching
+        $this->validate($request,[
+            'name'=>'string',
+        ]);
+        $patient = Patient::query();
+        if(isset($request->name)){
+            $patient = $patient->search($request->name);
+        }
+        //Seaching by gender, call scope gender
+        if(isset($request->gender)){
+            $patient = $patient->gender($request->gender);
+        }
+        //Searching by age, call scope age
+        if(isset($request->age)){
+            $patient = $patient->age($request->age);
+        }
+        //Searching by date time, call scope date time
+        if(isset($request->start_date) && isset($request->end_date)){
+            $patient = $patient->date($request->start_date,$request->end_date);
+        }
+        //Seaching by time care, call scope time
+        if(isset($request->start_time) && isset($request->end_time)){
+            $patient = $patient->time($request->start_time,$request->end_time);
+        }
+        //Searching by location, call scope location
+        if(isset($request->city_code) && isset($request->district_code)){
+            $patient = $patient->location($request->city_code,$request->district_code);
+        }
+        //Searching by address, call scope address
+        if(isset($request->address)){
+            $patient = $patient->address($request->address);
+        }
+        //Searching by certificate
+        if(isset($request->is_certificate)){
+            $patient = $patient->certificate($request->is_certificate);
+        }
+        $patient = $patient->paginate();
+        return $this->successResponseMessage(new PatientCollection($patient),200,'Searching detail patient');
     }
 
 }

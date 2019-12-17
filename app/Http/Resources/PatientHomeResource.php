@@ -27,7 +27,8 @@ class PatientHomeResource extends JsonResource
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'age'=>$this->age($this->birthday),
             'is_interest'=>$this->is_interest(Auth::id(),$this->id),
-            'user_caring'=>$this->getCare($this->id)
+            'user_caring'=>$this->getCare($this->id)['first'],
+            'remain_caring'=>$this->getCare($this->id)['remain_caring']
         ];
     }
 
@@ -40,7 +41,10 @@ class PatientHomeResource extends JsonResource
         if(sizeof($nures_care_id)>0){
             $nures_care_name = User::select('name')->where('id',$nures_care_id[0])->first();
         }
-        return ($nures_care_name == null) ? "": $nures_care_name->name;
+        return [
+            'first' => ($nures_care_name == null) ? "" : $nures_care_name->name,
+            'remain_caring' => ((sizeof($nures_care_id) - 1) > 0) ? (sizeof($nures_care_id) - 1) : 0
+        ];
     }
 
     private function is_interest($id_nures, $id_patient){
