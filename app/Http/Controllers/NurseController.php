@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\NurseHomeCollection;
-use App\Http\Resources\NurseProfileDetailResource;
-use App\Http\Resources\PatientCollection;
-use App\Models\Care;
-use App\Models\NurseInterest;
-use App\Models\NurseProfile;
-use App\Models\Patient;
-use App\Traits\ApiResponser;
-use App\Traits\FullTextSearch;
 use Auth;
-use Elasticquent\ElasticquentResultCollection;
+use App\Models\Care;
+use App\Models\Patient;
+use App\Models\NurseProfile;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use App\Models\NurseInterest;
+use App\Traits\FullTextSearch;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
+use App\Http\Resources\PatientCollection;
+use App\Http\Resources\NurseHomeCollection;
+use Elasticquent\ElasticquentResultCollection;
+use App\Http\Resources\NurseProfileDetailResource;
 
 class NurseController extends Controller
 {
@@ -37,9 +38,9 @@ class NurseController extends Controller
      */
     public function homePatient(Request $request)
     {
-        $code_add = Auth::user()->district_code;
+        $code_add = NurseProfile::select('code_add')->where('user_login',Auth::id())->first();
         $data = DB::table('patients')
-            ->orderByRaw("(abs(code_add - $code_add)) asc")
+            ->orderByRaw("(abs(code_add - $code_add->code_add)) asc")
             ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get home success");
     }
@@ -59,9 +60,9 @@ class NurseController extends Controller
             'end_time' => 'required',
             'address' => 'required|min:1|max:3',
             'is_certificate' => 'required|min:0|max:1',
-            'description' => 'string'
+            'description' => 'string',
+            'code_add'=>'required'
         ]);
-        $request->request->add(['code_add' => Auth::user()->district_code]);
         $request->request->add(['user_login' => Auth::id()]);
         //Update status register user
         $user = Auth::user();
@@ -80,9 +81,11 @@ class NurseController extends Controller
         // Lay patient da duoc cham soc
         $user_id = NurseInterest::pluck('user_patient');
 
-        $code_add = Auth::user()->district_code;
+        $code_add = NurseProfile::select('code_add')->where('user_login',Auth::id())->first();
 
-        $data = Patient::search($code_add)->whereNotIn('id', $user_id)->paginate();
+        $data = Patient::where('code_add',$code_add->code_add)
+                        ->whereNotIn('id',$user_id)
+                        ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get tab suggest success");
     }
 
@@ -92,29 +95,23 @@ class NurseController extends Controller
     public function interest(Request $request)
     {
         $user_id = NurseInterest::where('user_nurse', Auth::id())->pluck('user_patient');
-        $code_add = Auth::user()->district_code;
-        $data = Patient::search($code_add)->whereIn('id', $user_id)->paginate();
+       
+        $data = Patient::whereIn('id',$user_id)->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get interest success");
     }
 
     public function manager(Request $request)
     {
-        $number_request = Care::where('type', 2)
-            ->where('user_nurse', Auth::id())
-            ->where('user_login', Auth::id())
-            ->count();
+        
         $status = $request->status;
         $user_patient = Care::where('status', $status)
             ->where('user_nurse', Auth::id())
             ->where('user_login', Auth::id())
             ->pluck('user_patient');
-        $code_add = Auth::user()->district_code;
-        $data = Patient::search($code_add)->whereIn('id', $user_patient)->paginate();
-        $result = [
-            'number_request' => $number_request,
-            'data' => new PatientCollection($data)
-        ];
-        return $this->successResponseMessage($result, 200, "Get home success");
+
+        $data = Patient::whereIn('id',$user_patient)->paginate();
+       
+        return $this->successResponseMessage($data, 200, "Get home success");
     }
 
     public function nureInterestAction(Request $request)
