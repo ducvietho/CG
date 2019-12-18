@@ -68,6 +68,11 @@ class NurseController extends Controller
         $user->is_register = 1;
         $user->save();
         //end
+        if($request->start_time > $request->end_time){
+            $end_time = $request->end_time;
+            $request->request->set('end_time',1440);
+            $request->request->set('end_time_1',$end_time);
+        }
         $nurse_profile = NurseProfile::firstOrCreate($request->all());
         return $this->successResponseMessage(new NurseProfileDetailResource($nurse_profile), 200, "Register nurse profile success");
     }
@@ -213,12 +218,25 @@ class NurseController extends Controller
                     ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
             }
         }
-        if (isset($request->start_time)) {
-            $query = $query->where('profile_nurse.start_time', '<=', $start_time);
+        if (isset($request->start_time) && isset($request->end_time)) {
+            $start_time = $request->start_time;
+            $end_time = $request->end_time;
+           if( $start_time > $end_time ){
+               $end_time_1 = $end_time;
+               $query = $query->where('start_time','<=',$start_time)->where('end_time_1','>=',$end_time_1);
+
+           }else{
+               $query = $query->where(function ($query) use ($start_time,$end_time){
+                   $query->where(function ($query) use ($start_time,$end_time){
+                       $query->where('start_time','<=',$start_time)->where('end_time','>=',$end_time);
+                   })->orWhere(function ($query) use ($start_time,$end_time){
+                       $query->where('start_time_1','<=',$start_time)->where('end_time_1','>=',$end_time);
+                   });
+               });
+           }
+
         }
-        if (isset($request->end_time)) {
-            $query = $query->where('profile_nurse.end_time', '>=', $end_time);
-        }
+
         if (isset($request->city_code)) {
             $query = $query->where('profile_nurse.code_add', 'like', $request->city_code . '%');
         }

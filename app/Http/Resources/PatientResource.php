@@ -18,6 +18,10 @@ class PatientResource extends JsonResource
         $city_code = substr($this->code_add,0,2);
         $city_name = City::where('code',$city_code)->first();
         $district = District::where('code',$this->code_add)->first();
+        $end_time = $this->end_time;
+        if($this->end_time_1 > 0){
+            $end_time = $this->end_time_1;
+        }
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -29,7 +33,7 @@ class PatientResource extends JsonResource
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'start_time' => $this->start_time,
-            'end_time' => $this->end_time,
+            'end_time' => $end_time,
             'address' => $this->address,
             'note' => ($this->note != null) ? $this->note : '',
             'is_certificate' => $this->is_certificate,

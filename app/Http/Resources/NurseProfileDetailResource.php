@@ -20,6 +20,10 @@ class NurseProfileDetailResource extends JsonResource
         $city_name = City::where('code',$city_code)->first();
         $district = District::where('code',$this->code_add)->first();
         $user_login = User::find($this->user_login);
+        $end_time = $this->end_time;
+        if($this->end_time_1 > 0){
+            $end_time = $this->end_time_1;
+        }
         return [
             'id'=>$this->id,
             'name' => $user_login->name,
@@ -31,7 +35,7 @@ class NurseProfileDetailResource extends JsonResource
             'start_date'=>$this->start_date,
             'end_date'=>$this->end_date,
             'start_time'=>(int)$this->start_time,
-            'end_time'=>(int)$this->end_time,
+            'end_time'=>$end_time,
             'is_certificate'=>(int)$this->is_certificate,
             'description'=>$this->description,
             'rate'=>(float)($user_login->rate == null)?0:$user_login->rate,

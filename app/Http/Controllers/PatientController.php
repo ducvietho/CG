@@ -38,6 +38,11 @@ class PatientController extends Controller
             'address' => 'required',
             'is_certificate' => 'required|min:0|max:1',
         ]);
+        if($request->start_time > $request->end_time){
+            $end_time = $request->end_time;
+            $request->request->set('end_time',1440);
+            $request->request->set('end_time_1',$end_time);
+        }
         $patient = Patient::createPatient($request->all());
         $user = User::find(Auth::id());
         $user->is_register = 1;
