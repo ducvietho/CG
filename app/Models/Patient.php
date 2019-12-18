@@ -124,7 +124,8 @@ class Patient extends Model
      */
     public function scopeLocation($query, $city_code, $district_code){
         if($district_code !=0){
-            return $query->where('code_add',$district_code)->orWhere('code_add','like',$city_code.'%');
+            return $query->where('code_add',$district_code)->orWhere('code_add','like',$city_code.'%')
+                        ->orderByRaw("(abs(code_add - $district_code)) asc");
         }else{
             return $query->where('code_add','like',$city_code.'%');
         }

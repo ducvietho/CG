@@ -22,7 +22,7 @@ trait FullTextSearch
              * applying + operator (required word) only big words
              * because smaller ones are not indexed by mysql
              */
-            if(strlen($word) >= 1) {
+            if(strlen($word) >= 2) {
                 $words[$key] = '+' . $word . '*';
             }
         }
