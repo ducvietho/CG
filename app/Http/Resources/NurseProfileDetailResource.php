@@ -21,7 +21,7 @@ class NurseProfileDetailResource extends JsonResource
         $district = District::where('code',$this->code_add)->first();
         $user_login = User::find($this->user_login);
         return [
-            'id'=>$this->id,
+            'id'=>$this->user_login,
             'name' => $user_login->name,
             'avatar'=>$user_login->avatar,
             'user_name'=>$user_login->user_name,
@@ -34,7 +34,7 @@ class NurseProfileDetailResource extends JsonResource
             'end_time'=>(int)$this->end_time,
             'is_certificate'=>(int)$this->is_certificate,
             'description'=>$this->description,
-            'rate'=>(float)($user_login->rate == null)?0:$user_login->rate,
+            'rate'=>(float)($this->rate == null)?0:$this->rate,
             'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'age'=>$this->age($user_login->birthday),

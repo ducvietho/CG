@@ -22,7 +22,7 @@ class NurseHomeResource extends JsonResource
         $city_name = City::where('code', $city_code)->first();
         $district = District::where('code', $this->code_add)->first();
         return [
-            'id' => $this->id,
+            'id' => $this->user_login,
             'name' => $this->user->name,
             'avatar' => $this->user->avatar,
             'age' => $this->age($this->user->birthday),
@@ -31,7 +31,8 @@ class NurseHomeResource extends JsonResource
             'setting_care' => $this->user->setting_care,
             'is_interest' => $this->is_interest($this->id, Auth::id()),
             'user_caring' => $this->userCare()['first'],
-            'remain_caring' => $this->userCare()['remain_caring']
+            'remain_caring' => $this->userCare()['remain_caring'],
+            'rate'=>$this->rate
         ];
     }
 

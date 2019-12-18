@@ -136,7 +136,7 @@ class NurseController extends Controller
     public function detail(Request $request)
     {
         $nurseId = $request->id;
-        $nurse = NurseProfile::find($nurseId);
+        $nurse = NurseProfile::where('user_login',$nurseId)->firstorFail();
         return $this->successResponseMessage(new NurseProfileDetailResource($nurse), 200, 'Get detail nurse success');
     }
     /**

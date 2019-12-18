@@ -13,5 +13,18 @@ return [
     ],
     'interest'=>[
         'interested'=>1
+    ],
+    'type_user'=>[
+        'nurse'=>1,
+        'patient'=>2
+    ],
+    'request_status'=>[
+        'cancel'=>0,
+        'accepted'=>1,
+        'requesting'=>2
+    ],
+    'type_request'=>[
+        'nurse'=>1,
+        'patient'=>2
     ]
 ];
