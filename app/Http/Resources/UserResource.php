@@ -4,9 +4,9 @@
 namespace App\Http\Resources;
 
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {

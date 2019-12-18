@@ -167,10 +167,6 @@ class NurseController extends Controller
         if(isset($request->start_time) && isset($request->end_time)){
             $patient = $patient->time($request->start_time,$request->end_time);
         }
-        //Searching by location, call scope location
-        if(isset($request->city_code) && isset($request->district_code)){
-            $patient = $patient->location($request->city_code,$request->district_code);
-        }
         //Searching by address, call scope address
         if(isset($request->address)){
             $patient = $patient->address($request->address);
@@ -178,6 +174,10 @@ class NurseController extends Controller
         //Searching by certificate
         if(isset($request->is_certificate)){
             $patient = $patient->certificate($request->is_certificate);
+        }
+         //Searching by location, call scope location
+         if(isset($request->city_code) && isset($request->district_code)){
+            $patient = $patient->location($request->city_code,$request->district_code);
         }
         $patient = $patient->paginate();
         return $this->successResponseMessage(new PatientCollection($patient),200,'Searching detail patient');
