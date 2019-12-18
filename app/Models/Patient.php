@@ -11,7 +11,7 @@ class Patient extends Model
     use FullTextSearch;
 
     protected $table = 'patients';
-    protected $fillable = ['relationship', 'user_login', 'name', 'gender', 'birthday', 'code_add', 'start_date', 'end_date', 'start_time', 'end_time', 'address', 'note', 'is_certificate'];
+    protected $fillable = ['relationship', 'user_login', 'name', 'gender', 'birthday', 'code_add', 'start_date', 'end_date', 'start_time', 'end_time', 'address', 'note', 'is_certificate','end_time_1','start_time_1'];
 
     protected $searchable = [
         'name'
@@ -30,6 +30,7 @@ class Patient extends Model
             'end_date' => $data['end_date'],
             'start_time' => $data['start_time'],
             'end_time' => $data['end_time'],
+            'end_time_1' => $data['end_time_1'],
             'address' => $data['address'],
             'is_certificate' => $data['is_certificate'],
             'note' => isset($data['note']) ? $data['note'] : ''
@@ -83,8 +84,22 @@ class Patient extends Model
      * Searching by time
      */
     public function scopeTime($query, $start_time, $end_time){
-        if($start_time !=0 && $end_time !=0){
-            return $query->whereBetween('start_time',[$start_time, $end_time])->whereBetween('end_time',[$start_time, $end_time]);
+
+        if($start_time >=0 && $end_time >=0){
+            if( $start_time > $end_time ){
+                $end_time_1 = $end_time;
+                $query = $query->where('start_time','<=',$start_time)->where('end_time_1','>=',$end_time_1);
+
+            }else{
+                $query = $query->where(function ($query) use ($start_time,$end_time){
+                    $query->where(function ($query) use ($start_time,$end_time){
+                        $query->where('start_time','<=',$start_time)->where('end_time','>=',$end_time);
+                    })->orWhere(function ($query) use ($start_time,$end_time){
+                        $query->where('start_time_1','<=',$start_time)->where('end_time_1','>=',$end_time);
+                    });
+                });
+            }
+            return $query;
         }
     }
     /**
