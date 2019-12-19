@@ -92,7 +92,7 @@ class PatientController extends Controller
     public function interest(Request $request)
     {
         $nurseId = PatientInterest::where('user_login', Auth::id())->pluck('user_nurse')->toArray();
-        $listNurse = NurseProfile::whereIn('id', $nurseId)->orderBy('rate', 'DESC')->orderBy('created_at', 'DESC')->paginate();
+        $listNurse = NurseProfile::whereIn('user_login', $nurseId)->orderBy('rate', 'DESC')->orderBy('created_at', 'DESC')->paginate();
         return $this->successResponseMessage(new NurseHomeCollection($listNurse), 200, 'Get  nurse interest success');
     }
 
@@ -129,6 +129,10 @@ class PatientController extends Controller
     public function suggest(Request $request)
     {
         $codeAdd = Auth::user()->district_code;
+        if($codeAdd == null){
+            $patient = Patient::select('code_add')->where('user_login',Auth::id())->first();
+            $codeAdd = $patient->code_add;
+        }
         $nurseIds = Care::where('user_login', Auth::id())->where('status', '!=', 0)->pluck('user_nurse')->toArray();
         $nurseSuggest = NurseProfile::whereNotIn('id', $nurseIds)->orderByRaw("(abs(code_add - $codeAdd)) asc")->orderBy('rate', 'DESC')->paginate();
         return $this->successResponseMessage(new NurseHomeCollection($nurseSuggest), 200, 'Get nurse suggest success');
