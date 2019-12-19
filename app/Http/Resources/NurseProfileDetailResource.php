@@ -3,6 +3,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Care;
+use App\Models\Patient;
 use Auth;
 use App\User;
 use App\Models\City;
@@ -24,6 +26,8 @@ class NurseProfileDetailResource extends JsonResource
         if($this->end_time_1 > 0){
             $end_time = $this->end_time_1;
         }
+        $patient = Care::where('user_nurse',$this->user_login)->where('status',1)->pluck('user_patient')->toArray();
+        $user_caring = Patient::whereIn('id',$patient)->get();
         return [
             'id'=>$this->user_login,
             'name' => $user_login->name,
@@ -42,7 +46,8 @@ class NurseProfileDetailResource extends JsonResource
             'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'age'=>$this->age($user_login->birthday),
-            'is_interest'=>$this->is_interest($this->id,Auth::id())
+            'is_interest'=>$this->is_interest($this->id,Auth::id()),
+            'user_caring' => PatientShortResource::collection($user_caring)
         ];
     }
     private function age($year){
