@@ -25,7 +25,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $table = 'users';
     protected $fillable = [
-        'user_name', 'password', 'name', 'email', 'phone', 'address_detail', 'avatar', 'type', 'block', 'code_address', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id','type_account','setting_care','rate','is_register'
+        'user_name', 'password', 'name', 'email', 'phone', 'address_detail', 'avatar', 'type', 'block', 'code_address', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id','type_account','setting_care','is_register'
     ];
 
     /**
@@ -67,7 +67,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'provide_id' => isset($data['provide_id']) ? $data['provide_id'] : '',
             'type_account' => isset($data['type_account']) ? $data['type_account'] : 0,
             'setting_care' => 1,
-            'rate' => 0,
             'is_register' => 0
         ]);
         return $user;

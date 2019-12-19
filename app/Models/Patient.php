@@ -30,7 +30,7 @@ class Patient extends Model
             'end_date' => $data['end_date'],
             'start_time' => $data['start_time'],
             'end_time' => $data['end_time'],
-            'end_time_1' => $data['end_time_1'],
+            'end_time_1' => isset($data['end_time_1'])? $data['end_time_1'] : 0,
             'address' => $data['address'],
             'is_certificate' => $data['is_certificate'],
             'note' => isset($data['note']) ? $data['note'] : ''
