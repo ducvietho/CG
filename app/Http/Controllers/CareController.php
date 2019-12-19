@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\MyConst;
 use App\Models\Care;
+use App\Jobs\RequestJob;
+use App\Jobs\AcceptedJob;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
-use App\Http\Resources\CareResource;
 use Illuminate\Support\Facades\Config;
+use App\Http\Resources\CareDetailResource;
 
 class CareController extends Controller
 {
@@ -23,42 +26,104 @@ class CareController extends Controller
     }
 
     /**
-     * Send request care
+     * Send Nurse request care
      */
     public function requestCare(Request $request){
-        $this->validate([
-            'user_id'=>'required',
+        $this->validate($request,[
+            'user_patient'=>'required',
             'start_date'=>'required',
             'end_date'=>'required',
             'start_time'=>'required',
             'end_time'=>'required'
         ]);
         $type_user = Auth::user()->type;
-        
-        switch ($type_user) {
-            
-            case Config::get('constants.type_user.nurse'):
-                // Nurse sending request care patient
-                //Gan user_request = user_patient
-                $care = Care::create([
-                    'user_nurse'=>Auth::id(),
-                    'user_patient'=>$request->user_id,
-                    'user_login'=>Auth::id(),
-                    'type'=>Config::get('constants.type_request.nurse'),
-                    'status'=>Config::get('constants.request_status.requesting'),
-                    'start_date'=>$request->start_date,
-                    'end_date'=>$request->end_date,
-                    'start_time'=>$request->start_time,
-                    'end_time'=>$request->end_time,
-                    'rate'=>0
-                ]);      
-                return $this->successResponseMessage(new CareResource($care,$type_user), 200, "Request success");
-            case Config::get('constants.type_user.patient'):
-                // User login sending request nurse care
-                return $this->successResponseMessage(new \stdClass(), 200, "Request success");
-            default:
-                return;
-        }
+        // Nurse sending request care patient
+        //Gan user_request = user_patient
+        $care = Care::firstorCreate([
+            'user_nurse'=>Auth::id(),
+            'user_patient'=>$request->user_patient,
+            'user_login'=>Auth::id(),
+            'type'=>MyConst::NURSER_REQUEST,
+            'status'=>MyConst::REQUESTING,
+            'start_date'=>$request->start_date,
+            'end_date'=>$request->end_date,
+            'start_time'=>$request->start_time,
+            'end_time'=>$request->end_time,
+            'rate'=>0
+        ]);
+        //Sending noti nurse request care
+        dispatch(new RequestJob(Auth::id(),0,$request->user_patient,MyConst::NOTI_NURSE_REQUEST,$care->id));
+        return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success");       
     }
-    
+    /**
+     * Nurse accept request
+     */
+    public function nurseAcept(Request $request){
+        $this->validate($request,[
+            'id_request'=>'required'
+        ]);
+        $type_user = Auth::user()->type;
+        if($type_user != MyConst::NURSE){
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denied"); 
+        }
+
+        $care = Care::where('id',$request->id_request)
+                    ->where('type',MyConst::PATIENT_REQUEST)
+                    ->firstorFail();
+        $care->status = MyConst::ACCEPTED;
+        $care->save();
+        dispatch(new AcceptedJob(Auth::id(),0,MyConst::NOTI_NURSE_ACCEPT,$care->id, $care->user_patient));
+        return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success"); 
+    }
+    /**
+     * Patient request care
+     */
+    public function patientRequest(Request $request){
+        $this->validate($request,[
+            'user_nurse'=>'required',
+            'user_patient'=>'required',
+            'start_date'=>'required',
+            'end_date'=>'required',
+            'start_time'=>'required',
+            'end_time'=>'required'
+        ]);
+        $type_user = Auth::user()->type;
+        // Nurse sending request care patient
+        //Gan user_request = user_patient
+        $care = Care::firstorCreate([
+            'user_nurse'=>$request->user_nurse,
+            'user_patient'=>$request->user_patient,
+            'user_login'=>Auth::id(),
+            'type'=>MyConst::PATIENT_REQUEST,
+            'status'=>MyConst::REQUESTING,
+            'start_date'=>$request->start_date,
+            'end_date'=>$request->end_date,
+            'start_time'=>$request->start_time,
+            'end_time'=>$request->end_time,
+            'rate'=>0
+        ]);
+        //Sending noti nurse request care
+        dispatch(new RequestJob(Auth::id(),$request->user_nurse,$request->user_patient,MyConst::NOTI_PATIENT_REQUEST,$care->id));
+        return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success"); 
+    }
+    /**
+     * Patient accepted request
+     */
+    public function patientAcept(Request $request){
+        $this->validate($request,[
+            'id_request'=>'required'
+        ]);
+        $type_user = Auth::user()->type;
+        if($type_user != MyConst::PATIENT){
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denied"); 
+        }
+
+        $care = Care::where('id',$request->id_request)
+                    ->where('type',MyConst::NURSER_REQUEST)
+                    ->firstorFail();
+        $care->status = MyConst::ACCEPTED;
+        $care->save();
+        dispatch(new AcceptedJob(Auth::id(),$care->user_nurse,MyConst::NOTI_PATIENT_ACCEPT,$care->id, $care->user_patient));
+        return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success"); 
+    }
 }

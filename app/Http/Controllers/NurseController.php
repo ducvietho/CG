@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\NurseInterest;
 use App\Traits\FullTextSearch;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\CareCollection;
 use Illuminate\Support\Facades\Config;
 use App\Http\Resources\PatientCollection;
 use App\Http\Resources\NurseHomeCollection;
@@ -109,14 +110,13 @@ class NurseController extends Controller
     {
         
         $status = $request->status;
-        $user_patient = Care::where('status', $status)
+        $user_patient = Care::select('id','user_patient')
+            ->where('status', $status)
             ->where('user_nurse', Auth::id())
             ->where('user_login', Auth::id())
-            ->pluck('user_patient');
-
-        $data = Patient::whereIn('id',$user_patient)->paginate();
+            ->paginate();
        
-        return $this->successResponseMessage($data, 200, "Get home success");
+        return $this->successResponseMessage(new CareCollection($user_patient), 200, "Get home success");
     }
 
     public function nureInterestAction(Request $request)
