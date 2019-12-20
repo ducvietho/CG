@@ -4,8 +4,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\NotificationCollection;
 use App\Http\Resources\UserResource;
 use App\Jobs\ForgotPassword;
+use App\Models\Notification;
 use App\Models\NurseProfile;
 use App\Models\Patient;
 use App\Traits\ApiResponser;
@@ -136,5 +138,15 @@ class UserController extends Controller
         $user->setting_care = $settingCare;
         $user->save();
         return $this->successResponseMessage(new UserResource($user), 200, 'Setting care success');
+    }
+
+    /*
+     * List notification
+     */
+
+    public function getNoti(Request $request){
+        $notis = Notification::where('user_to',Auth::id())->paginate();
+        return $this->successResponseMessage(new NotificationCollection($notis),200,'Get notification success');
+
     }
 }

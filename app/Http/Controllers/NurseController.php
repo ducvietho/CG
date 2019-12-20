@@ -199,7 +199,7 @@ class NurseController extends Controller
         $start_date = $request->start_date;
         $end_date = $request->end_date;
         $adddress = $request->address;
-        $is_certificate = $request->is_certificate;
+        $is_certificate = isset($request->is_certificate) ? json_decode($request->is_certificate) : [];
         $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
             ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
         if (isset($request->district_code)) {
@@ -250,7 +250,7 @@ class NurseController extends Controller
             $query = $query->where('users.user_name', 'like', $this->fullText($user_name));
         }
         if (isset($request->is_certificate)) {
-            $query = $query->where('profile_nurse.is_certificate', $is_certificate);
+            $query = $query->whereIn('profile_nurse.is_certificate', $is_certificate);
         }
         if(isset($request->age)){
             $age = json_decode($request->age);

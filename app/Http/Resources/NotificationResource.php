@@ -6,6 +6,8 @@ namespace App\Http\Resources;
 
 use App\Models\Notification;
 use App\Models\NurseProfile;
+use App\Models\Patient;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Resources\Json\JsonResource;
 

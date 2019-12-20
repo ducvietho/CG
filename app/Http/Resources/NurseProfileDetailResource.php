@@ -46,7 +46,7 @@ class NurseProfileDetailResource extends JsonResource
             'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'age'=>$this->age($user_login->birthday),
-            'is_interest'=>$this->is_interest($this->id,Auth::id()),
+            'is_interest'=>$this->is_interest($this->user_login,Auth::id()),
             'user_caring' => PatientShortResource::collection($user_caring)
         ];
     }

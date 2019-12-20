@@ -28,7 +28,7 @@ class NurseHomeResource extends JsonResource
             'age' => $this->age($this->user->birthday),
             'city' => ($city_name == null) ? new \stdClass() : new CityResource($city_name),
             'district' => ($district == null) ? new \stdClass() : new DistrictResource($district),
-            'is_interest' => $this->is_interest($this->id, Auth::id()),
+            'is_interest' => $this->is_interest($this->user_login, Auth::id()),
             'rate'=>$this->rate
         ];
     }
