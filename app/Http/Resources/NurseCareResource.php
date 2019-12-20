@@ -22,7 +22,7 @@ class NurseCareResource extends JsonResource
     {
         return [
             'id_request' => $this->id,
-            'nurse' =>  new NurseHomeResource(NurseProfile::where('user_login',$this->user_nurse)->first())
+            'user' =>  new NurseHomeResource(NurseProfile::where('user_login',$this->user_nurse)->first())
         ];
     }
 

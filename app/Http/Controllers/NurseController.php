@@ -196,14 +196,8 @@ class NurseController extends Controller
         $name = $request->name;
         $user_name = $request->user_name;
         $gender = $request->gender;
-        $max_birthday = date("Y") - $request->min_age;
-        if (isset($request->max_age) && $request->max_age > 0) {
-            $min_birthay = date("Y") - $request->max_age;
-        }
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-        $start_time = $request->start_time;
-        $end_time = $request->end_time;
         $adddress = $request->address;
         $is_certificate = $request->is_certificate;
         $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
@@ -258,12 +252,17 @@ class NurseController extends Controller
         if (isset($request->is_certificate)) {
             $query = $query->where('profile_nurse.is_certificate', $is_certificate);
         }
-        if (isset($request->max_age)) {
-            $query = $query->where('users.birthday', '>=', $min_birthay);
+        if(isset($request->age)){
+            $age = json_decode($request->age);
+            if(sizeof($age)>0){
+                $query = $query->where('users.birthday', '<=', date("Y") - $age[0]);
+                if(sizeof($age)>1){
+                    $query = $query->where('users.birthday', '>=', date("Y") - $age[1]);
+                }
+            }
+
         }
-        if (isset($request->min_age)) {
-            $query = $query->where('users.birthday', '<=', $max_birthday);
-        }
+
         if (isset($request->gender)) {
             $query = $query->where('users.gender', $gender);
         }
