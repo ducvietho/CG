@@ -34,9 +34,11 @@ class CareDetailResource extends JsonResource
                     'rate' => $this->rate
                ];
             case MyConst::PATIENT_REQUEST:
+                $user_patient = Patient::select('name','id','user_login')->find($this->user_patient);
                 return [
                      'id_request'=>$this->id,
                      'user'=>$this->formatNurse($this->user_nurse),
+                     'name_patient' =>$user_patient->name,
                      'status'=>$this->status,
                      'start_date'=>$this->start_date,
                      'end_date'=>$this->end_date,
