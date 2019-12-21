@@ -126,4 +126,14 @@ class CareController extends Controller
         dispatch(new AcceptedJob(Auth::id(),$care->user_nurse,MyConst::NOTI_PATIENT_ACCEPT,$care->id, $care->user_patient));
         return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success"); 
     }
+
+    /*
+     * Detail Care
+     */
+    public function detail(Request $request){
+        $idCare = $request->id_request;
+        $care = Care::findOrFail($idCare);
+        $type_user = Auth::user()->type;
+        return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Detail request success");
+    }
 }

@@ -71,6 +71,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('request','CareController@patientRequest');
             $router->post('accept','CareController@patientAcept');
         });
-
+        $router->post('care/detail','CareController@detail');
     });
 });
