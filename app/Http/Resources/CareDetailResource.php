@@ -30,7 +30,8 @@ class CareDetailResource extends JsonResource
                     'start_date'=>$this->start_date,
                     'end_date'=>$this->end_date,
                     'start_time'=>$this->start_time,
-                    'end_time'=>$this->end_time,           
+                    'end_time'=>$this->end_time,
+                    'rate' => $this->rate
                ];
             case MyConst::PATIENT_REQUEST:
                 return [
@@ -40,7 +41,8 @@ class CareDetailResource extends JsonResource
                      'start_date'=>$this->start_date,
                      'end_date'=>$this->end_date,
                      'start_time'=>$this->start_time,
-                     'end_time'=>$this->end_time,         
+                     'end_time'=>$this->end_time,
+                     'rate' => $this->rate
                 ];
             default:
                 # code...

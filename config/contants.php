@@ -26,5 +26,6 @@ return [
     'type_request'=>[
         'nurse'=>1,
         'patient'=>2
-    ]
+    ],
+    'SERVER_KEY'=>''
 ];
