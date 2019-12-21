@@ -38,10 +38,10 @@ class PatientController extends Controller
             'address' => 'required',
             'is_certificate' => 'required|min:0|max:1',
         ]);
-        if($request->start_time > $request->end_time){
+        if ($request->start_time > $request->end_time) {
             $end_time = $request->end_time;
-            $request->request->set('end_time',1440);
-            $request->request->set('end_time_1',$end_time);
+            $request->request->set('end_time', 1440);
+            $request->request->set('end_time_1', $end_time);
         }
         $patient = Patient::createPatient($request->all());
         $user = User::find(Auth::id());
@@ -129,8 +129,8 @@ class PatientController extends Controller
     public function suggest(Request $request)
     {
         $codeAdd = Auth::user()->district_code;
-        if($codeAdd == null){
-            $patient = Patient::select('code_add')->where('user_login',Auth::id())->first();
+        if ($codeAdd == null) {
+            $patient = Patient::select('code_add')->where('user_login', Auth::id())->first();
             $codeAdd = $patient->code_add;
         }
         $nurseIds = Care::where('user_login', Auth::id())->where('status', '!=', 0)->pluck('user_nurse')->toArray();
@@ -141,7 +141,8 @@ class PatientController extends Controller
     public function manage(Request $request)
     {
         $status = isset($request->status) ? $request->status : 1;
-        $nurseCare = Care::where('status',$status)->where('user_login',Auth::id())->paginate();
-        return $this->successResponseMessage(new NurseCareCollection($nurseCare),200,'Get nurse care success');
+        $patients = Patient::where('user_login', Auth::id())->pluck('id')->toArray();
+        $nurseCare = Care::where('status', $status)->whereIn('user_patient', $patients)->paginate();
+        return $this->successResponseMessage(new NurseCareCollection($nurseCare), 200, 'Get nurse care success');
     }
 }
