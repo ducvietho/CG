@@ -11,7 +11,7 @@ class Patient extends Model
     use FullTextSearch;
 
     protected $table = 'patients';
-    protected $fillable = ['relationship', 'user_login', 'name', 'gender', 'birthday', 'code_add', 'start_date', 'end_date', 'start_time', 'end_time', 'address', 'note', 'is_certificate','end_time_1','start_time_1'];
+    protected $fillable = ['relationship', 'user_login', 'name', 'gender', 'birthday', 'code_add', 'start_date', 'end_date', 'start_time', 'end_time', 'address', 'note', 'is_certificate','end_time_1','start_time_1','avatar'];
 
     protected $searchable = [
         'name'
@@ -33,8 +33,8 @@ class Patient extends Model
             'end_time_1' => isset($data['end_time_1'])? $data['end_time_1'] : 0,
             'address' => $data['address'],
             'is_certificate' => $data['is_certificate'],
-            'note' => isset($data['note']) ? $data['note'] : ''
-
+            'note' => isset($data['note']) ? $data['note'] : '',
+            'avatar'=>($data['avatar'] == "")?env('AVATAR_DEFAULT'):$data['avatar']
         ]);
         return $patient;
     }

@@ -36,12 +36,22 @@ class PatientController extends Controller
             'start_time' => 'required',
             'address' => 'required',
             'is_certificate' => 'required|min:0|max:1',
+            'avatar'=>'string'
         ]);
         if ($request->start_time > $request->end_time) {
             $end_time = $request->end_time;
             $request->request->set('end_time', 1440);
             $request->request->set('end_time_1', $end_time);
         }
+        if(isset($request->avatar)){
+            if($request->avatar != null){
+                $avatar = $this->upload(MyConst::AVATAR,$request->avatar,Auth::id());
+                $request->request->set('avatar',$avatar);
+            }
+        }else{
+            $request->request->set('avatar',"");
+        }
+        
         $patient = Patient::createPatient($request->all());
         $user = User::find(Auth::id());
         $user->is_register = 1;

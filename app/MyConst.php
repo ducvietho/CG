@@ -21,4 +21,7 @@ class MyConst{
     public const NOTI_NURSE_ACCEPT =6;
     //type interested
     public const INTERESTED =1;
+    //folder certificate
+    public const CERTIFICATE = 1;
+    public const AVATAR =0;
 }
