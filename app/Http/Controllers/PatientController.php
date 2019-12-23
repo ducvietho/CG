@@ -3,16 +3,15 @@
 
 namespace App\Http\Controllers;
 
-
+use Auth;
 use App\User;
+use App\MyConst;
 use App\Models\Care;
 use App\Models\Patient;
 use App\Models\NurseProfile;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use App\Models\PatientInterest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use App\Http\Resources\PatientResource;
 use App\Http\Resources\PatientCollection;
 use App\Http\Resources\NurseCareCollection;
@@ -100,7 +99,7 @@ class PatientController extends Controller
     {
         $id_nurse = $request->id;
         $is_interest = isset($request->is_interest) ? $request->is_interest : 0;
-        if ($is_interest == Config::get('contants.interest.interested')) {
+        if ($is_interest == MyConst::INTERESTED) {
             PatientInterest::where([
                 'user_login' => Auth::id(),
                 'user_nurse' => $id_nurse

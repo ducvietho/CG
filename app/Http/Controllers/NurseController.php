@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\MyConst;
 use App\Models\Care;
 use App\Models\Patient;
 use App\Models\NurseProfile;
@@ -12,7 +13,6 @@ use App\Models\NurseInterest;
 use App\Traits\FullTextSearch;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CareCollection;
-use Illuminate\Support\Facades\Config;
 use App\Http\Resources\PatientCollection;
 use App\Http\Resources\NurseHomeCollection;
 use Elasticquent\ElasticquentResultCollection;
@@ -89,8 +89,8 @@ class NurseController extends Controller
 
         $code_add = NurseProfile::select('code_add')->where('user_login',Auth::id())->first();
 
-        $data = Patient::where('code_add',$code_add->code_add)
-                        ->whereNotIn('id',$user_id)
+        $data = DB::table('patients')->whereNotIn('id',$user_id)
+                        ->orderByRaw("(abs(code_add - $code_add->code_add)) asc")       
                         ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get tab suggest success");
     }
@@ -125,7 +125,7 @@ class NurseController extends Controller
         $patient_id = $request->patient_id;
 
         $message = "";
-        if ($is_interest == Config::get('constants.interest.interested')) {
+        if ($is_interest == MyConst::INTERESTED) {
             $check = NurseInterest::where('user_patient', $patient_id)->where('user_nurse', Auth::id())->delete();
             $messeage = "Un interested success";
         } else {
@@ -154,7 +154,9 @@ class NurseController extends Controller
         ]);
         $patient = Patient::query();
         if(isset($request->name)){
-            $patient = $patient->search($request->name);
+            if($request->name != ""){
+                $patient = $patient->search($request->name);
+            }         
         }
         //Seaching by gender, call scope gender
         if(isset($request->gender)){

@@ -19,4 +19,6 @@ class MyConst{
     public const NOTI_NURSE_REQUEST = 4;
     public const NOTI_NURSE_CANCEL =5;
     public const NOTI_NURSE_ACCEPT =6;
+    //type interested
+    public const INTERESTED =1;
 }
