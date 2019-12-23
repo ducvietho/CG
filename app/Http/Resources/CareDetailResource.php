@@ -22,7 +22,7 @@ class CareDetailResource extends JsonResource
     {
         switch ($this->type_user) {
             case MyConst::NURSER_REQUEST:
-                $user_patient = Patient::select('name','id','user_login')->find($this->user_patient);
+                $user_patient = Patient::select('name','id','user_login','avatar')->find($this->user_patient);
                return [
                     'id_request'=>$this->id,
                     'user'=>$this->formatPatient($user_patient),
@@ -34,7 +34,7 @@ class CareDetailResource extends JsonResource
                     'rate' => $this->rate
                ];
             case MyConst::PATIENT_REQUEST:
-                $user_patient = Patient::select('name','id','user_login')->find($this->user_patient);
+                $user_patient = Patient::select('name','id','user_login','avatar')->find($this->user_patient);
                 return [
                      'id_request'=>$this->id,
                      'user'=>$this->formatNurse($this->user_nurse),
@@ -56,7 +56,7 @@ class CareDetailResource extends JsonResource
         return [
             'id'=>$patient->id,
             'name'=>$patient->name,
-            'avatar'=>$user->avatar,
+            'avatar'=>$patient->avatar,
             'phone'=>$user->phone,
             'email'=>$user->email
         ];

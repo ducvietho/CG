@@ -14,7 +14,7 @@ class AddAvatarPatient extends Migration
     public function up()
     {
         Schema::table('patients', function ($table) {
-            $table->integer('avatar');
+            $table->string('avatar');
         });
     }
 
