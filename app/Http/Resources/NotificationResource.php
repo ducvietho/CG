@@ -19,7 +19,8 @@ class NotificationResource extends JsonResource
             'user_from'=>$this->formatUser($this->user_from),
             'patient'=>$this->formatPatient($this->user_patient),
             'type'=>$this->type,
-            'id_request'=>$this->request_id
+            'id_request'=>$this->request_id,
+            'created'=>strtotime($this->created_at)
         ];
     }
     protected function formatUser($id_user){
@@ -27,14 +28,17 @@ class NotificationResource extends JsonResource
         return ($user == null)? new \stdClass(): [
             'id'=>$user->id,
             'name'=>$user->name,
-            'avatar'=>$user->avatar
+            'avatar'=>$user->avatar,
+            'birthday'=>date("Y") - $user->birthday
         ];
     }
     protected function formatPatient($id_user){
         $patient = Patient::find($id_user);
         return ($patient == null)? new \stdClass(): [
             'id'=>$patient->id,
-            'name'=>$patient->name
+            'avatar'=>$patient->avatar,
+            'name'=>$patient->name,
+            'birthday'=>date("Y") - $patient->birthday
         ];
     }
 }

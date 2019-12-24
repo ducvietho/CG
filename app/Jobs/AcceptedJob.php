@@ -6,6 +6,7 @@ use App\User;
 use App\Models\Patient;
 use App\Models\Notification;
 use App\Traits\PushNotiController;
+use App\Http\Resources\NotificationResource;
 
 class AcceptedJob extends Job
 {
@@ -60,7 +61,7 @@ class AcceptedJob extends Job
             $noti = Notification::create($data);
         }
         $user_key = User::select('fcm_token')->findorFail($user_id_to);
-        $this->pushNotification($user_key->fcm_token,json_encode($noti));
+        $this->pushNotification($user_key->fcm_token,json_encode(new NotificationResource($noti)));
         
     }
 }
