@@ -16,18 +16,11 @@ trait FullTextSearch
         $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~'];
         $term = str_replace($reservedSymbols, '', $term);
         $words = explode(' ', $term);
-      
-        foreach($words as $key => $word) {
-            /*
-             * applying + operator (required word) only big words
-             * because smaller ones are not indexed by mysql
-             */
-            if(strlen($word) >= 1) {
-                $words[$key] = '+' . $word . '*';
-            }
+        if(strlen($words) == 1) {
+            $searchTerm = '+' . $term . '*';
+        }else{
+            $searchTerm = $term;
         }
-
-        $searchTerm = implode( ' ', $words);
         return $searchTerm;
     }
 
@@ -46,4 +39,5 @@ trait FullTextSearch
         $query->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)" , $this->fullTextWildcards($term));
         return $query;
     }
+
 }
