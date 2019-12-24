@@ -269,6 +269,9 @@ class NurseController extends Controller
         if (isset($request->gender)&& sizeof(json_decode($request->gender)) > 0) {
             $query = $query->whereIn('users.gender', json_decode($request->gender));
         }
+        if (isset($request->nationality)&& sizeof(json_decode($request->nationality)) > 0) {
+            $query = $query->whereIn('profile_nurse.nationality', json_decode($request->nationality));
+        }
         $collection = $query->orderBy('profile_nurse.rate', 'DESC')->orderBy('profile_nurse.created_at', 'DESC')->paginate();
         return response()->json([
             'status' => 200,
