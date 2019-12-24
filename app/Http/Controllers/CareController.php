@@ -180,6 +180,9 @@ class CareController extends Controller
         if(Auth::id() != $patient->user_login){
             return $this->successResponseMessage(new \stdClass(), 418, "Permision denied");
         }
+        if($care->rate >0){
+            return $this->successResponseMessage(new \stdClass(), 418, "You are only evaluated once");
+        }
         $care->rate = $request->rate;
         $care->save();
         dispatch(new UpdateRateJob($care->user_nurse));
