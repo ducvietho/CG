@@ -65,89 +65,108 @@ class Patient extends Model
     /**
      * End relationship
      */
-    public function scopeGender($query, $gender){
-        $gender = json_decode($gender);
-        $count = count($gender);
-        if($count ==1){
-            return $query->where('gender', $gender[0]);
-        }
+    public function scopeGender($query, $request){
+        if(isset($request->gender)){
+            $gender = json_decode($request->gender);
+            $count = count($gender);
+            if($count ==1){
+                return $query->where('gender', $gender[0]);
+            }
+        }    
     }
     /**
      * Searching by date time
      */
-    public function scopeDate($query, $start_date, $end_date){
-        if($start_date !=0 && $end_date !=0){
-            return $query->whereBetween('start_date',[$start_date, $end_date])->whereBetween('end_date',[$start_date, $end_date]);
-        }
+    public function scopeDate($query, $request){
+        if(isset($request->start_date) && isset($request->end_date)){
+            if($request->start_date !=0 && $request->end_date){
+                return $query->whereBetween('start_date',[$request->start_date, $request->end_date])->whereBetween('end_date',[$request->start_date, $request->end_date]);
+            }
+        }     
     }
     /**
      * Searching by time
      */
-    public function scopeTime($query, $start_time, $end_time){
-
-        if($start_time >=0 && $end_time >=0){
-            if( $start_time > $end_time ){
-                $end_time_1 = $end_time;
-                $query = $query->where('start_time','<=',$start_time)->where('end_time_1','>=',$end_time_1);
-
-            }else{
-                $query = $query->where(function ($query) use ($start_time,$end_time){
-                    $query->where(function ($query) use ($start_time,$end_time){
-                        $query->where('start_time','<=',$start_time)->where('end_time','>=',$end_time);
-                    })->orWhere(function ($query) use ($start_time,$end_time){
-                        $query->where('start_time_1','<=',$start_time)->where('end_time_1','>=',$end_time);
+    public function scopeTime($query, $request){
+        if(isset($request->start_time) && isset($request->end_time)){
+            $start_time= $request->start_time;
+            $end_time = $request->end_time;
+            if($start_time >=0 && $end_time >=0){
+                if( $start_time > $end_time ){
+                    $end_time_1 = $end_time;
+                    $query = $query->where('start_time','<=',$start_time)->where('end_time_1','>=',$end_time_1);
+    
+                }else{
+                    $query = $query->where(function ($query) use ($start_time,$end_time){
+                        $query->where(function ($query) use ($start_time,$end_time){
+                            $query->where('start_time','<=',$start_time)->where('end_time','>=',$end_time);
+                        })->orWhere(function ($query) use ($start_time,$end_time){
+                            $query->where('start_time_1','<=',$start_time)->where('end_time_1','>=',$end_time);
+                        });
                     });
-                });
+                }
+                return $query;
             }
-            return $query;
         }
     }
     /**
      * Searching by age
      */
-    public function scopeAge($query, $age){
-        $age = json_decode($age);
-        $count = sizeof($age);
-        if($count ==1){
-            $birthday =  date("Y") - $age[0];
-            return $query->whereRaw("birthday >=", $birthday);
-        }
-        if($count >1){
-            $start_age = date("Y") - $age[0];
-            $end_age = date("Y") - $age[$count -1];
-            $age_range = [$start_age, $end_age];
-            return $query->whereBetween('birthday',$age_range);
-        }
+    public function scopeAge($query, $request){
+        if(isset($request->age)){
+            $age = json_decode($request->age);
+            $count = sizeof($age);
+            if($count ==1){
+                $birthday =  date("Y") - $age[0];
+                return $query->whereRaw("birthday >=", $birthday);
+            }
+            if($count >1){
+                $start_age = date("Y") - $age[0];
+                $end_age = date("Y") - $age[$count -1];
+                $age_range = [$start_age, $end_age];
+                return $query->whereBetween('birthday',$age_range);
+            }
+        }      
     }
     /**
      * Searching by location
      */
-    public function scopeLocation($query, $city_code, $district_code){
-        if($district_code !=0){
-            return $query->where('code_add',$district_code)->orWhere('code_add','like',$city_code.'%')
-                        ->orderByRaw("(abs(code_add - $district_code)) asc");
-        }else{
-            return $query->where('code_add','like',$city_code.'%');
+    public function scopeLocation($query, $request){
+        if(isset($request->city_code) && isset($request->district_code)){
+            $district_code = $request->district_code;
+            $city_code = $request->city_code;
+            if(($district_code !=0 || $district_code !="") && $city_code!=""){
+                return $query->where('code_add',$district_code)->orWhere('code_add','like',$city_code.'%')
+                            ->orderByRaw("(abs(code_add - $district_code)) asc");
+            }
+            if($city_code !="" && $city_code==""){
+                return $query->where('code_add','like',$city_code.'%');
+            }
         }
     }
     /** 
      * Searching by address care
      */
-    public function scopeAddress($query, $address){
-        $address = json_decode($address);
-        $count = sizeof($address);
-        if($count >0){
-            return $query->whereIn('address',$address);
+    public function scopeAddress($query, $request){
+        if(isset($request->address)){
+            $address = json_decode($request->address);
+            $count = sizeof($address);
+            if($count >0){
+                return $query->whereIn('address',$address);
+            }
         }
+        
     }
     /**
      * Searching by certificate
      */
-    public function scopeCertificate($query, $is_certificate){
-        $is_certificate = json_decode($is_certificate);
-        $count = count($is_certificate);
-        if($count ==1){
-            return $query->where('is_certificate', $is_certificate[0]);
-        }
+    public function scopeCertificate($query, $request){
+        if(isset($request->is_certificate)){
+            $is_certificate = json_decode($request->is_certificate);
+            $count = count($is_certificate);
+            if($count ==1){
+                return $query->where('is_certificate', $is_certificate[0]);
+            }
+        }   
     }
 }

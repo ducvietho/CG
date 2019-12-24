@@ -158,34 +158,13 @@ class NurseController extends Controller
                 $patient = $patient->search($request->name);
             }         
         }
-        //Seaching by gender, call scope gender
-        if(isset($request->gender)){
-            $patient = $patient->gender($request->gender);
-        }
-        //Searching by age, call scope age
-        if(isset($request->age)){
-            $patient = $patient->age($request->age);
-        }
-        //Searching by date time, call scope date time
-        if(isset($request->start_date) && isset($request->end_date)){
-            $patient = $patient->date($request->start_date,$request->end_date);
-        }
-        //Seaching by time care, call scope time
-        if(isset($request->start_time) && isset($request->end_time)){
-            $patient = $patient->time($request->start_time,$request->end_time);
-        }
-        //Searching by address, call scope address
-        if(isset($request->address)){
-            $patient = $patient->address($request->address);
-        }
-        //Searching by certificate
-        if(isset($request->is_certificate)){
-            $patient = $patient->certificate($request->is_certificate);
-        }
-         //Searching by location, call scope location
-         if(isset($request->city_code) && isset($request->district_code)){
-            $patient = $patient->location($request->city_code,$request->district_code);
-        }
+        $patient->gender($request)
+                ->date($request)
+                ->time($request)
+                ->age($request)
+                ->address($request)
+                ->certificate($request)
+                ->location($request);
         $patient = $patient->paginate();
         return $this->successResponseMessage(new PatientCollection($patient),200,'Searching detail patient');
     }	    
