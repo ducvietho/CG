@@ -16,7 +16,7 @@ trait FullTextSearch
         $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~'];
         $term = str_replace($reservedSymbols, '', $term);
         $words = explode(' ', $term);
-        if(strlen($words) == 1) {
+        if(count($words) == 1) {
             $searchTerm = '+' . $term . '*';
         }else{
             $searchTerm = $term;
