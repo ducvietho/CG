@@ -197,14 +197,13 @@ class NurseController extends Controller
 
         $name = $request->name;
         $user_name = $request->user_name;
-        $gender = $request->gender;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
         $adddress = $request->address;
         $is_certificate = isset($request->is_certificate) ? json_decode($request->is_certificate) : [];
         $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
             ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
-        if (isset($request->district_code)) {
+        if (isset($request->district_code) && $request->district_code != null) {
             $query = $query->where('profile_nurse.code_add', $request->district_code);
             if(sizeof($query->get())== 0){
                 $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
@@ -214,34 +213,36 @@ class NurseController extends Controller
         if (isset($request->start_time) && isset($request->end_time)) {
             $start_time = $request->start_time;
             $end_time = $request->end_time;
-           if( $start_time > $end_time ){
-               $end_time_1 = $end_time;
-               $query = $query->where('start_time','<=',$start_time)->where('end_time_1','>=',$end_time_1);
+            if($start_time >0 || $end_time > 0){
+                if( $start_time > $end_time ){
+                    $end_time_1 = $end_time;
+                    $query = $query->where('start_time','<=',$start_time)->where('end_time_1','>=',$end_time_1);
+                }else{
+                    $query = $query->where(function ($query) use ($start_time,$end_time){
+                        $query->where(function ($query) use ($start_time,$end_time){
+                            $query->where('start_time','<=',$start_time)->where('end_time','>=',$end_time);
+                        })->orWhere(function ($query) use ($start_time,$end_time){
+                            $query->where('start_time_1','<=',$start_time)->where('end_time_1','>=',$end_time);
+                        });
+                    });
+                }
+            }
 
-           }else{
-               $query = $query->where(function ($query) use ($start_time,$end_time){
-                   $query->where(function ($query) use ($start_time,$end_time){
-                       $query->where('start_time','<=',$start_time)->where('end_time','>=',$end_time);
-                   })->orWhere(function ($query) use ($start_time,$end_time){
-                       $query->where('start_time_1','<=',$start_time)->where('end_time_1','>=',$end_time);
-                   });
-               });
-           }
 
         }
 
-        if (isset($request->city_code)) {
+        if (isset($request->city_code) && $request->city_code != null) {
             $query = $query->where('profile_nurse.code_add', 'like', $request->city_code . '%');
         }
 
-        if (isset($request->address)) {
+        if (isset($request->address) && $request->address > 0) {
             $query = $query->whereIn('profile_nurse.address', json_decode($adddress));
         }
 
-        if (isset($request->start_date)) {
+        if (isset($request->start_date) && $request->start_date > 0) {
             $query = $query->where('profile_nurse.start_date', '<=', $start_date);
         }
-        if (isset($request->end_date)) {
+        if (isset($request->end_date) && $request->end_date > 0) {
             $query = $query->where('profile_nurse.end_date', '>=', $end_date);
         }
 
@@ -251,7 +252,7 @@ class NurseController extends Controller
         if (isset($request->user_name)) {
             $query = $query->where('users.user_name', 'like', $this->fullText($user_name));
         }
-        if (isset($request->is_certificate)) {
+        if (isset($request->is_certificate) && sizeof($is_certificate)>0) {
             $query = $query->whereIn('profile_nurse.is_certificate', $is_certificate);
         }
         if(isset($request->age)){
@@ -265,8 +266,8 @@ class NurseController extends Controller
 
         }
 
-        if (isset($request->gender)) {
-            $query = $query->where('users.gender', $gender);
+        if (isset($request->gender)&& sizeof(json_decode($request->gender)) > 0) {
+            $query = $query->whereIn('users.gender', json_decode($request->gender));
         }
         $collection = $query->orderBy('profile_nurse.rate', 'DESC')->orderBy('profile_nurse.created_at', 'DESC')->paginate();
         return response()->json([
