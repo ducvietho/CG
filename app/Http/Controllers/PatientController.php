@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\MediaClass;
 use Auth;
 use App\User;
 use App\MyConst;
@@ -21,7 +22,7 @@ use App\Http\Resources\PatientListCollection;
 class PatientController extends Controller
 {
     use ApiResponser;
-
+    use MediaClass;
     public function create(Request $request)
     {
         $this->validate($request, [
@@ -49,7 +50,7 @@ class PatientController extends Controller
                 $request->request->set('avatar',$avatar);
             }
         }else{
-            $request->request->set('avatar',"");
+            $request->request->set('avatar',env('AVATAR_DEFAULT'));
         }
         
         $patient = Patient::createPatient($request->all());
@@ -74,7 +75,13 @@ class PatientController extends Controller
         $address = isset($request->address) ? $request->address : $patient->address;
         $is_certificate = isset($request->is_certificate) ? $request->is_certificate : $patient->is_certificate;
         $note = isset($request->note) ? $request->note : $patient->note;
-        $patient = Patient::updatePatient($request->id, $name, $relationship, $gender, $birthday, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note);
+        $avatar = $patient->avatar;
+        if(isset($request->avatar)){
+            if($request->avatar != null){
+                $avatar = $this->upload(MyConst::AVATAR,$request->avatar,Auth::id());
+            }
+        }
+        $patient = Patient::updatePatient($request->id, $name, $relationship, $gender, $birthday, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note,$avatar);
         return $this->successResponseMessage(new PatientResource($patient), 200, 'Update patient success');
 
     }
