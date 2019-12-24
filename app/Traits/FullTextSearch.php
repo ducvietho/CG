@@ -17,17 +17,11 @@ trait FullTextSearch
         $term = str_replace($reservedSymbols, '', $term);
         $words = explode(' ', $term);
       
-        foreach($words as $key => $word) {
-            /*
-             * applying + operator (required word) only big words
-             * because smaller ones are not indexed by mysql
-             */
-            if(strlen($word) >= 1) {
-                $words[$key] = '+' . $word . '*';
-            }
-        }
-
-        $searchTerm = implode( ' ', $words);
+        if(strlen($word) == 1) {
+            $searchTerm = '+' . $term . '*';
+        }else{
+            $searchTerm = $term;
+        }   
         return $searchTerm;
     }
 
@@ -45,29 +39,5 @@ trait FullTextSearch
 
         $query->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)" , $this->fullTextWildcards($term));
         return $query;
-    }
-
-    protected function fullText($term)
-    {
-        // removing symbols used by MySQL
-        $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~'];
-        $term = str_replace($reservedSymbols, '', $term);
-
-        $words = explode(' ', $term);
-        if(sizeof($words)>1){
-            $fulltext = '%';
-            foreach($words as $key => $word) {
-                /*
-                 * applying + operator (required word) only big words
-                 * because smaller ones are not indexed by mysql
-                 */
-                $fulltext = $fulltext.$word.'%';
-            }
-
-        }else{
-            $fulltext = $term.'*';
-        }
-
-        return $fulltext;
     }
 }
