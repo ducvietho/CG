@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Auth;
 use App\MyConst;
 use App\Models\Care;
+use App\Models\Patient;
 use App\Jobs\RequestJob;
 use App\Jobs\AcceptedJob;
+use App\Jobs\UpdateRateJob;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -135,5 +137,52 @@ class CareController extends Controller
         $care = Care::findOrFail($idCare);
         $type_user = Auth::user()->type;
         return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Detail request success");
+    }
+    /**
+     * Nurse completed
+     */
+    public function nurseComplete(Request $request){
+        $this->validate($request,[
+            'id_request'=>'required'
+        ]);
+        $type_user = Auth::user()->type;
+        if($type_user != MyConst::NURSE){
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denied"); 
+        }
+        $care = Care::where('id',$request->id_request)
+        ->firstorFail();
+        if(Auth::id() != $care->user_nurse){
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denied");
+        }
+        $care->status = MyConst::COMPLETED;
+        $care->save();
+        dispatch(new AcceptedJob(Auth::id(),0,MyConst::NOTI_COMPLETED,$care->id, $care->user_patient));
+        return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request completed"); 
+    }
+    /**
+     * Patient rating
+     */
+    public function patientRating(Request $request){
+        $this->validate($request,[
+            'id_request'=>'required',
+            'rate'=>'required'
+        ]);
+        $type_user = Auth::user()->type;
+        if($type_user != MyConst::PATIENT){
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denied"); 
+        }
+        $care = Care::where('id',$request->id_request)
+        ->firstorFail();
+        if($care->status != MyConst::COMPLETED){
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denied");
+        }
+        $patient = Patient::select('user_login')->findOrFail($care->user_patient);
+        if(Auth::id() != $patient->user_login){
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denied");
+        }
+        $care->rate = $request->rate;
+        $care->save();
+        dispatch(new UpdateRateJob($care->user_nurse));
+        return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Rate success");
     }
 }

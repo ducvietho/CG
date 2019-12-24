@@ -62,6 +62,5 @@ class AcceptedJob extends Job
         }
         $user_key = User::select('fcm_token')->findorFail($user_id_to);
         $this->pushNotification($user_key->fcm_token,json_encode(new NotificationResource($noti)));
-        
     }
 }

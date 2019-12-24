@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 
+use App\MyConst;
 use Illuminate\Support\Facades\Config;
 
 trait PushNotiController
@@ -21,7 +22,7 @@ trait PushNotiController
         }
         $headers = array
         (
-            'Authorization: key=' . Config::get('constants.SERVER_KEY'),
+            'Authorization: key=' . MyConst::SERVER_KEY,
             'Content-Type: application/json'
         );
         $ch = curl_init();
