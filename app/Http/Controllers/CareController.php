@@ -32,7 +32,7 @@ class CareController extends Controller
      */
     public function requestCare(Request $request){
         $this->validate($request,[
-            'user_patient'=>'required',
+            'user_patient'=>'required|min:1',
             'start_date'=>'required',
             'end_date'=>'required',
             'start_time'=>'required',
@@ -82,8 +82,8 @@ class CareController extends Controller
      */
     public function patientRequest(Request $request){
         $this->validate($request,[
-            'user_nurse'=>'required',
-            'user_patient'=>'required',
+            'user_nurse'=>'required|min:1',
+            'user_patient'=>'required|min:1',
             'start_date'=>'required',
             'end_date'=>'required',
             'start_time'=>'required',
