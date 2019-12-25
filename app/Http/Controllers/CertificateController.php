@@ -29,7 +29,7 @@ class CertificateController extends Controller
             'image'=>'required'
         ]);
         if(Auth::user()->type != MyConst::NURSE){
-            return $this->successResponseMessage($data, 418, "Permision denined");
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denined");
         }
         if($request->image != null){
             $sign_certificate = $this->upload(MyConst::CERTIFICATE,$request->image,Auth::id());
@@ -49,7 +49,15 @@ class CertificateController extends Controller
             Auth::user()->is_sign =1;
             Auth::user()->save();
         }
-        return $this->successResponseMessage(new UserResource(Auth::user()), 200, "Sign certificate success");
+        $data = [
+            'name'=>Auth::user()->name,
+            'birthday'=>Auth::user()->birthday,
+            'gender'=>Auth::user()->gender,
+            'phone'=>Auth::user()->phone,
+            'sign'=>$certificate->image,
+            'created'=>strtotime($certificate->created_at)
+        ];
+        return $this->successResponseMessage($data, 200, "Sign certificate success");
     }
     public function getCertificate(Request $request){
         if(Auth::user()->type != MyConst::NURSE){
