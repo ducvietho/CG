@@ -42,21 +42,6 @@ class UserController extends Controller
             return $this->successResponseMessage(['user_id' => $user->user_id], 200, 'Find user success');
         }
     }
-
-    public function delete(Request $request)
-    {
-        $userId = Auth::id();
-        $user = User::find($userId);
-        if ($user->email == $request->email) {
-            $user->delete();
-            Patient::where('user_login')->delete();
-            $nurse = NurseProfile::where('user_login')->delete();
-            return $this->successResponseMessage(new \stdClass(), 200, 'Delete user success');
-        } else {
-            return $this->successResponseMessage(new \stdClass(), 413, 'Email incorrect');
-        }
-    }
-
     public function forgotPass(Request $request)
     {
         $userId = $request->user_id;
@@ -155,7 +140,13 @@ class UserController extends Controller
      * Cancel Account
      */
     public function cancelAccount(Request $request){
+        $this->validate($request,[
+            'email'=>'required'
+        ]);
         $type_user = Auth::user()->type;
+        if(Auth::user()->email != $request->email){
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denined");
+        }
         dispatch(new CancelAccountJob(Auth::id(),$type_user));
         return $this->successResponseMessage(new \stdClass(),200,'Cancel account success');
     }
