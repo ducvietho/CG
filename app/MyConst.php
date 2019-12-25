@@ -13,6 +13,7 @@ class MyConst{
     //type user
     public const NURSE =1;
     public const PATIENT =2;
+    public const BLOCK =1;
     //notification type
     public const NOTI_PATIENT_REQUEST =1;
     public const NOTI_PATIENT_CANCEL =2;

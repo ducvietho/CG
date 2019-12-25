@@ -4,20 +4,22 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\Resources\NotificationCollection;
-use App\Http\Resources\UserResource;
+use App\User;
+use App\MyConst;
+use App\Models\Patient;
+use App\Traits\MediaClass;
+use Tymon\JWTAuth\JWTAuth;
 use App\Jobs\ForgotPassword;
 use App\Models\Notification;
 use App\Models\NurseProfile;
-use App\Models\Patient;
 use App\Traits\ApiResponser;
-use App\Traits\MediaClass;
-use App\User;
-use Elasticsearch\ClientBuilder;
 use Illuminate\Http\Request;
+use App\Jobs\CancelAccountJob;
+use Elasticsearch\ClientBuilder;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\JWTAuth;
+use App\Http\Resources\NotificationCollection;
 
 class UserController extends Controller
 {
@@ -148,5 +150,13 @@ class UserController extends Controller
         $notis = Notification::where('user_to',Auth::id())->paginate();
         return $this->successResponseMessage(new NotificationCollection($notis),200,'Get notification success');
 
+    }
+    /**
+     * Cancel Account
+     */
+    public function cancelAccount(Request $request){
+        $type_user = Auth::user()->type;
+        dispatch(new CancelAccountJob(Auth::id(),$type_user));
+        return $this->successResponseMessage(new \stdClass(),200,'Cancel account success');
     }
 }
