@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'type' => $this->type,
             'gender' => $this->gender,
+            'type_account' => $this->type_account,
             'birthday' => $this->birthday,
             'setting_care' => $this->setting_care,
             'rate' => ($rate != null)? $rate->rate : 0,
