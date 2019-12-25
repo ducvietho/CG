@@ -47,6 +47,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->group(['prefix' => 'nurse'], function () use ($router) {
             $router->post('/home', 'NurseController@homePatient');
             $router->post('/register', 'NurseController@registerNurse');
+            $router->post('/update', 'NurseController@updateProfile');
             $router->post('/interest', 'NurseController@interest');
             $router->post('/suggest', 'NurseController@suggest');
             $router->post('/manager', 'NurseController@manager');

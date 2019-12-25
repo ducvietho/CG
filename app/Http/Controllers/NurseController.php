@@ -261,5 +261,19 @@ class NurseController extends Controller
         ]);
 
     }
-
+    /**
+     * Update profile nurse
+     */
+    public function updateProfile(Request $request){
+        $profile = NurseProfile::where('user_login',Auth::id())->first();
+        if(isset($request->start_time) && isset($request->end_time)){
+            if($request->start_time > $request->end_time){
+                $end_time = $request->end_time;
+                $request->request->set('end_time',1440);
+                $request->request->set('end_time_1',$end_time);
+            }
+        }  
+        $profile->update($request->all());
+        return $this->successResponseMessage(new NurseProfileDetailResource($profile), 200, "Update success");
+    }
 }
