@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use App\MyConst;
-use App\Models\Care;
-use App\Models\Patient;
-use App\Models\NurseProfile;
-use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
-use App\Models\NurseInterest;
-use App\Traits\FullTextSearch;
-use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CareCollection;
-use App\Http\Resources\PatientCollection;
 use App\Http\Resources\NurseHomeCollection;
-use Elasticquent\ElasticquentResultCollection;
 use App\Http\Resources\NurseProfileDetailResource;
+use App\Http\Resources\PatientCollection;
+use App\Models\Care;
+use App\Models\NurseInterest;
+use App\Models\NurseProfile;
+use App\Models\Patient;
+use App\MyConst;
+use App\Traits\ApiResponser;
+use App\Traits\FullTextSearch;
+use App\Traits\ProcessTextSearch;
+use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class NurseController extends Controller
 {
     use ApiResponser;
     use FullTextSearch;
-
+    use ProcessTextSearch;
     /**
      * Create a new controller instance.
      *
@@ -164,6 +164,7 @@ class NurseController extends Controller
                 ->age($request)
                 ->address($request)
                 ->certificate($request)
+                ->nationality($request)
                 ->location($request);
         $patient = $patient->paginate();
         return $this->successResponseMessage(new PatientCollection($patient),200,'Searching detail patient');
