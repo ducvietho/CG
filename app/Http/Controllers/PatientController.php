@@ -23,6 +23,7 @@ class PatientController extends Controller
 {
     use ApiResponser;
     use MediaClass;
+
     public function create(Request $request)
     {
         $this->validate($request, [
@@ -37,22 +38,22 @@ class PatientController extends Controller
             'start_time' => 'required',
             'address' => 'required',
             'is_certificate' => 'required|min:0|max:1',
-            'avatar'=>'string'
+            'avatar' => 'string'
         ]);
         if ($request->start_time > $request->end_time) {
             $end_time = $request->end_time;
             $request->request->set('end_time', 1440);
             $request->request->set('end_time_1', $end_time);
         }
-        if(isset($request->avatar)){
-            if($request->avatar != null){
-                $avatar = $this->upload(MyConst::AVATAR,$request->avatar,Auth::id());
-                $request->request->set('avatar',$avatar);
+        if (isset($request->avatar)) {
+            if ($request->avatar != null) {
+                $avatar = $this->upload(MyConst::AVATAR, $request->avatar, Auth::id());
+                $request->request->set('avatar', $avatar);
             }
-        }else{
-            $request->request->set('avatar',env('AVATAR_DEFAULT'));
+        } else {
+            $request->request->set('avatar', env('AVATAR_DEFAULT'));
         }
-        
+
         $patient = Patient::createPatient($request->all());
         $user = User::find(Auth::id());
         $user->is_register = 1;
@@ -75,13 +76,14 @@ class PatientController extends Controller
         $address = isset($request->address) ? $request->address : $patient->address;
         $is_certificate = isset($request->is_certificate) ? $request->is_certificate : $patient->is_certificate;
         $note = isset($request->note) ? $request->note : $patient->note;
+        $nationality = isset($request->nationality) ? $request->nationality : $patient->nationality;
         $avatar = $patient->avatar;
-        if(isset($request->avatar)){
-            if($request->avatar != null){
-                $avatar = $this->upload(MyConst::AVATAR,$request->avatar,Auth::id());
+        if (isset($request->avatar)) {
+            if ($request->avatar != null) {
+                $avatar = $this->upload(MyConst::AVATAR, $request->avatar, Auth::id());
             }
         }
-        $patient = Patient::updatePatient($request->id, $name, $relationship, $gender, $birthday, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note,$avatar);
+        $patient = Patient::updatePatient($request->id, $name, $relationship, $gender, $birthday, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note, $avatar,$nationality);
         return $this->successResponseMessage(new PatientResource($patient), 200, 'Update patient success');
 
     }
