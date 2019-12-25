@@ -145,7 +145,7 @@ class UserController extends Controller
         ]);
         $type_user = Auth::user()->type;
         if(Auth::user()->email != $request->email){
-            return $this->successResponseMessage(new \stdClass(), 418, "Permision denined");
+            return $this->successResponseMessage(new \stdClass(), 413, "Email incorrect");
         }
         dispatch(new CancelAccountJob(Auth::id(),$type_user));
         return $this->successResponseMessage(new \stdClass(),200,'Cancel account success');

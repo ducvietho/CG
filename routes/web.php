@@ -37,7 +37,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
         $router->group(['prefix' => 'user'], function () use ($router) {
-            $router->post('/delete','UserController@delete');
             $router->post('/changePass','UserController@changePass');
             $router->post('/logout','UserController@logout');
             $router->post('/editProfile','UserController@editProfile');
