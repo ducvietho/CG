@@ -29,7 +29,7 @@ class NotificationResource extends JsonResource
             'id'=>$user->id,
             'name'=>$user->name,
             'avatar'=>$user->avatar,
-            'birthday'=>date("Y") - $user->birthday
+            'age'=>date("Y") - $user->birthday
         ];
     }
     protected function formatPatient($id_user){
@@ -38,7 +38,7 @@ class NotificationResource extends JsonResource
             'id'=>$patient->id,
             'avatar'=>$patient->avatar,
             'name'=>$patient->name,
-            'birthday'=>date("Y") - $patient->birthday
+            'age'=>date("Y") - $patient->birthday
         ];
     }
 }
