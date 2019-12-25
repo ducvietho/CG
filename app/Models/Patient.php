@@ -99,7 +99,7 @@ class Patient extends Model
         if (isset($request->start_time) && isset($request->end_time)) {
             $start_time = $request->start_time;
             $end_time = $request->end_time;
-            if ($start_time >= 0 && $end_time >= 0) {
+            if ($start_time > 0 || $end_time > 0) {
                 if ($start_time > $end_time) {
                     $end_time_1 = $end_time;
                     $query = $query->where('start_time', '<=', $start_time)->where('end_time_1', '>=', $end_time_1);
@@ -134,7 +134,7 @@ class Patient extends Model
                 $start_age = date("Y") - $age[0];
                 $end_age = date("Y") - $age[$count - 1];
                 $age_range = [$start_age, $end_age];
-                return $query->whereBetween('birthday', $age_range);
+                return $query->whereBetween('birthday', $age);
             }
         }
     }
