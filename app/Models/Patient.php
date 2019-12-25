@@ -85,7 +85,7 @@ class Patient extends Model
     public function scopeDate($query, $request)
     {
         if (isset($request->start_date) && isset($request->end_date)) {
-            if ($request->start_date != 0 && $request->end_date) {
+            if ($request->start_date > 0 && $request->end_date > 0) {
                 return $query->whereBetween('start_date', [$request->start_date, $request->end_date])->whereBetween('end_date', [$request->start_date, $request->end_date]);
             }
         }
