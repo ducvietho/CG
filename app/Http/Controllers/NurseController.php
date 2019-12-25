@@ -240,7 +240,7 @@ class NurseController extends Controller
             if(sizeof($age)>0){
                 $query = $query->where('users.birthday', '<=', date("Y") - $age[0]);
                 if(sizeof($age)>1){
-                    $query = $query->where('users.birthday', '>=', date("Y") - $age[1]);
+                    $query = $query->where('users.birthday', '>=', date("Y") - end($age));
                 }
             }
 
