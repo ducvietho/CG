@@ -133,8 +133,8 @@ class Patient extends Model
             if ($count > 1) {
                 $start_age = date("Y") - $age[0];
                 $end_age = date("Y") - $age[$count - 1];
-                $age_range = [$start_age, $end_age];
-                return $query->whereBetween('birthday', $age);
+                $age_range = [$end_age, $start_age];
+                return $query->whereBetween('birthday', $age_range);
             }
         }
     }
