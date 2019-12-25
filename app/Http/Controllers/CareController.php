@@ -181,7 +181,7 @@ class CareController extends Controller
             return $this->successResponseMessage(new \stdClass(), 418, "Permision denied");
         }
         if($care->rate >0){
-            return $this->successResponseMessage(new \stdClass(), 418, "You are only evaluated once");
+            return $this->successResponseMessage(new \stdClass(), 419, "You are only evaluated once");
         }
         $care->rate = $request->rate;
         $care->save();
