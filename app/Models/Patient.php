@@ -40,7 +40,7 @@ class Patient extends Model
         return $patient;
     }
 
-    public static function updatePatient($id, $name, $relationship, $gender, $birthay, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note, $avatar, $nationality)
+    public static function updatePatient($id, $name, $relationship, $gender, $birthay, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note, $avatar, $nationality,$end_time_1)
     {
         $patient = Patient::findOrFail($id);
         $patient->name = $name;
@@ -57,6 +57,7 @@ class Patient extends Model
         $patient->note = $note;
         $patient->avatar = $avatar;
         $patient->nationality = $nationality;
+        $patient->end_time_1 = $end_time_1;
         $patient->save();
         return $patient;
     }
