@@ -116,7 +116,6 @@ class NurseController extends Controller
         $user_patient = Care::select('id','user_patient','status','user_nurse','user_login')
             ->where('status', $status)
             ->where('user_nurse', Auth::id())
-            ->where('user_login', Auth::id())
             ->paginate();
        
         return $this->successResponseMessage(new CareCollection($user_patient), 200, "Get home success");
