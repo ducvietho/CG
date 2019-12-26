@@ -6,6 +6,7 @@ use Auth;
 use App\MyConst;
 use App\Models\Care;
 use App\Models\Patient;
+use App\Traits\MediaClass;
 use App\Models\NurseProfile;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ use App\Http\Resources\NurseProfileDetailResource;
 
 class NurseController extends Controller
 {
+    use MediaClass;
     use ApiResponser;
     use FullTextSearch;
 
@@ -266,6 +268,12 @@ class NurseController extends Controller
      */
     public function updateProfile(Request $request){
         $profile = NurseProfile::where('user_login',Auth::id())->first();
+        if (isset($request->avatar)) {
+            if ($request->avatar != null) {
+                $avatar = $this->upload(MyConst::AVATAR, $request->avatar, Auth::id());
+                $equest->request->set('avatar',$avatar);
+            }
+        }
         if(isset($request->start_time) && isset($request->end_time)){
             if($request->start_time > $request->end_time){
                 $end_time = $request->end_time;
