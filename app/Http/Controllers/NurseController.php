@@ -113,7 +113,7 @@ class NurseController extends Controller
     {
         
         $status = $request->status;
-        $user_patient = Care::select('id','user_patient','status')
+        $user_patient = Care::select('id','user_patient','status','user_nurse','user_login')
             ->where('status', $status)
             ->where('user_nurse', Auth::id())
             ->where('user_login', Auth::id())
