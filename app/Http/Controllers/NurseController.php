@@ -271,7 +271,7 @@ class NurseController extends Controller
         if (isset($request->avatar)) {
             if ($request->avatar != null) {
                 $avatar = $this->upload(MyConst::AVATAR, $request->avatar, Auth::id());
-                $equest->request->set('avatar',$avatar);
+                $request->request->set('avatar',$avatar);
             }
         }
         if(isset($request->start_time) && isset($request->end_time)){
