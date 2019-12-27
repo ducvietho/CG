@@ -38,11 +38,11 @@ class Login1Controller extends Controller
             }
             $data['token'] = $token;
             $data['user'] = new UserResource($user);
-            if($user->type == MyConst::NURSE && $user->is_sign ==0){
-                return $this->successResponseMessage($data, 416, "The nurse needs to sign the form");
-            }
             if ($user->is_register == 0) {
                 return $this->successResponseMessage($data, 412, "You need to register a profile");
+            }
+            if($user->type == MyConst::NURSE && $user->is_sign ==0){
+                return $this->successResponseMessage($data, 416, "The nurse needs to sign the form");
             }    
             return $this->successResponseMessage($data, 200, "Login success");
         }
@@ -62,13 +62,12 @@ class Login1Controller extends Controller
         }
         $data['token'] = $token;
         $data['user'] = new UserResource($user);
-        if($user->type == MyConst::NURSE && $user->is_sign ==0){
-            return $this->successResponseMessage($data, 416, "The nurse needs to sign the form");
-        }
-
         if ($user->is_register == 0) {
             return $this->successResponseMessage($data, 412, "You need to register a profile");
-        }    
+        } 
+        if($user->type == MyConst::NURSE && $user->is_sign ==0){
+            return $this->successResponseMessage($data, 416, "The nurse needs to sign the form");
+        }   
         return $this->successResponseMessage($data, 200, "Login success");
         
 
