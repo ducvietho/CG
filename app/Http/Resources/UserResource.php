@@ -3,7 +3,7 @@
 
 namespace App\Http\Resources;
 
-
+use Auth;
 use App\Models\Notification;
 use App\Models\NurseProfile;
 use Illuminate\Support\Facades\Auth;
