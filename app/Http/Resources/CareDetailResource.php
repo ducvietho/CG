@@ -73,7 +73,7 @@ class CareDetailResource extends JsonResource
             'avatar'=>$user->avatar,
             'phone'=>$user->phone,
             'email'=>$user->email,
-            'rate'=>array_sum($rate)/count($rate)
+            'rate'=>(count($rate) >0)?array_sum($rate)/count($rate):0
         ];
     }
 }
