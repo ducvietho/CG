@@ -1,12 +1,12 @@
 <?php
 
+use Illuminate\Mail\Mailer;
 use App\Providers\AuthServiceProvider;
 use Barryvdh\Queue\AsyncServiceProvider;
 use Illuminate\Contracts\Mail\MailQueue;
-use Illuminate\Filesystem\FilesystemServiceProvider;
-use Illuminate\Mail\Mailer;
 use Illuminate\Mail\MailServiceProvider;
 use Tymon\JWTAuth\Providers\LumenServiceProvider;
+use Illuminate\Filesystem\FilesystemServiceProvider;
 
 require_once __DIR__.'/../vendor/autoload.php';
 

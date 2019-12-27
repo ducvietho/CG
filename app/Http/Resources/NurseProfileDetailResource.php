@@ -3,11 +3,11 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Care;
-use App\Models\Patient;
 use Auth;
 use App\User;
+use App\Models\Care;
 use App\Models\City;
+use App\Models\Patient;
 use App\Models\District;
 use App\Models\PatientInterest;
 use App\Http\Resources\CityResource;

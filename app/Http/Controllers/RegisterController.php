@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
-use App\Traits\ApiResponser;
-use App\Traits\MediaClass;
 use App\User;
-use Illuminate\Http\Request;
+use App\Traits\MediaClass;
 use Tymon\JWTAuth\JWTAuth;
+use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 
 class RegisterController extends Controller
 {

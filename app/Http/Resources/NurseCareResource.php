@@ -13,8 +13,8 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\NurseProfile;
 use App\Models\PatientInterest;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NurseCareResource extends JsonResource
 {

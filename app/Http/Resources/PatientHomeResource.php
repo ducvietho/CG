@@ -3,12 +3,12 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Care;
-use App\Models\NurseInterest;
-use App\User;
 use Auth;
+use App\User;
+use App\Models\Care;
 use App\Models\City;
 use App\Models\District;
+use App\Models\NurseInterest;
 use App\Http\Resources\CityResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 

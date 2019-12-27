@@ -7,8 +7,8 @@ namespace App\Http\Resources;
 use App\Models\City;
 use App\Models\District;
 use App\Models\NurseInterest;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 
 class PatientResource extends JsonResource

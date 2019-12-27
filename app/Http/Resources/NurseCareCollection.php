@@ -10,8 +10,8 @@ namespace App\Http\Resources;
 
 
 use App\Models\Care;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class NurseCareCollection extends ResourceCollection
 {

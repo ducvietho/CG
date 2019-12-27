@@ -4,14 +4,14 @@
 namespace App\Http\Resources;
 
 
+use App\User;
 use App\Models\Care;
 use App\Models\City;
-use App\Models\District;
 use App\Models\Patient;
+use App\Models\District;
 use App\Models\PatientInterest;
-use App\User;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NurseHomeResource extends JsonResource
 {
