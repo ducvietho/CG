@@ -13,7 +13,7 @@ class UserResource extends JsonResource
 {
     public function toArray($request)
     {
-        $noti = Notification::where('user_to',Auth::id())->where('unwatch',0)->count();
+        $noti = Notification::where('user_to',Auth::id())->where('unwatch',0)->pluck('id')->toArray();
         $rate = NurseProfile::select('rate')->where('user_login',Auth::id())->first();
         return [
             'id' => $this->id,
@@ -32,7 +32,7 @@ class UserResource extends JsonResource
             'is_register' => $this->is_register,
             'city' => ($this->city != null) ? new CityResource($this->city) : new \stdClass(),
             'district' => ($this->district != null) ? new DistrictResource($this->district) : new \stdClass(),
-            'notification' => $noti
+            'notification' => count($noti)
         ];
     }
 }
