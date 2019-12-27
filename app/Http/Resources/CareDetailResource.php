@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 
 use App\User;
 use App\MyConst;
+use App\Models\Care;
 use App\Models\Patient;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -63,12 +64,16 @@ class CareDetailResource extends JsonResource
     }
     protected function formatNurse($nurse_id){
         $user = User::select('id','phone','email','name','avatar')->find($nurse_id);
+        $rate = Care::where('user_nurse',$nurse_id)
+        ->where('rate','>',0)
+        ->pluck('rate')->toArray();
         return [
             'id'=>$user->id,
             'name'=>$user->name,
             'avatar'=>$user->avatar,
             'phone'=>$user->phone,
-            'email'=>$user->email
+            'email'=>$user->email,
+            'rate'=>array_sum($rate)/count($rate)
         ];
     }
 }
