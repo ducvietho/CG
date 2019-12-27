@@ -3,18 +3,16 @@
 
 namespace App\Http\Resources;
 
-use Auth;
 use App\Models\Notification;
 use App\Models\NurseProfile;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
     public function toArray($request)
     {
-        $noti = Notification::where('user_to',Auth::id())->where('unwatch',0)->pluck('id')->toArray();
-        $rate = NurseProfile::select('rate')->where('user_login',Auth::id())->first();
+        $noti = Notification::where('user_to',$this->id)->where('unwatch',0)->pluck('id')->toArray();
+        $rate = NurseProfile::select('rate')->where('user_login',$this->id)->first();
         return [
             'id' => $this->id,
             'name' => $this->name,
