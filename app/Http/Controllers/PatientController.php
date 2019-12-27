@@ -73,7 +73,7 @@ class PatientController extends Controller
         $end_date = isset($request->end_date) ? $request->end_date : $patient->end_date;
         $end_time = isset($request->end_time) ? $request->end_time : $patient->end_time;
         $start_time = isset($request->start_time) ? $request->start_time : $patient->start_time;
-        $end_time1 =0;
+        $end_time_1 =0;
         if ($request->start_time > $request->end_time) {
             $end_time_1 =  $end_time;
             $end_time =  1440;
