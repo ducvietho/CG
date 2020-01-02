@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\ProcessTextSearch;
 use Auth;
 use App\MyConst;
 use App\Models\Care;
@@ -24,6 +25,7 @@ class NurseController extends Controller
     use MediaClass;
     use ApiResponser;
     use FullTextSearch;
+    use ProcessTextSearch;
 
     /**
      * Create a new controller instance.
