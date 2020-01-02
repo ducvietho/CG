@@ -41,7 +41,10 @@ class LocationController extends Controller
     //Get list city
     public function getListCity(Request $request){
         $key = $request->key;
-        $data = City::where('original_name','like','%'.$key.'%')->orWhere('show_name','like','%'.$key.'%')->get();
+        $data = City::where('original_name','like','%'.$key.'%')
+                    ->orWhere('show_name','like','%'.$key.'%')
+                    ->orderBy('score','asc')
+                    ->get();
         return $this->successResponseMessage(CityResource::collection($data),200,'Get city success');
     }
 

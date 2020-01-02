@@ -18,6 +18,7 @@ class CityImport implements ToModel
            'code'     => $row[0],
            'original_name'    => $row[1], 
            'show_name' => $row[2],
+           'score'=>$row[3]
         ]);
     }
 }

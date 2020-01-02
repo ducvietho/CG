@@ -18,6 +18,7 @@ class CreateCitiesTable extends Migration
             $table->string('original_name');
             $table->string('show_name');
             $table->string('code')->default('');
+            $table->integer('score');
             $table->timestamps();
         });
     }
