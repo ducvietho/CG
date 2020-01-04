@@ -69,4 +69,17 @@ class RegisterController extends Controller
         $data['user'] = new UserResource($user);
         return $this->successResponseMessage($data,200,'Register social success');
     }
+
+    /*
+     * Check User ID
+     */
+    public function checkID(Request $request){
+        $userId = $request->user_id;
+        $user = User::where('user_id',$userId)->first();
+        $data['check'] = 0;
+        if($user != null){
+            $data['check'] = 1;
+        }
+        return $this->successResponseMessage($data,200,'Check user ID success');
+    }
 }

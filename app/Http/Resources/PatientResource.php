@@ -4,6 +4,7 @@
 namespace App\Http\Resources;
 
 
+use App\Models\Care;
 use App\Models\City;
 use App\Models\District;
 use App\Models\NurseInterest;
@@ -19,6 +20,11 @@ class PatientResource extends JsonResource
         $city_name = City::where('code',$city_code)->first();
         $district = District::where('code',$this->code_add)->first();
         $end_time = $this->end_time;
+        $isCare = 0;
+        $care = Care::where('user_patient',$this->id)->where('status',1)->first();
+        if($care != null){
+            $isCare = 1;
+        }
         if($this->end_time_1 > 0){
             $end_time = $this->end_time_1;
         }
@@ -38,7 +44,8 @@ class PatientResource extends JsonResource
             'address' => $this->address,
             'note' => ($this->note != null) ? $this->note : '',
             'is_certificate' => $this->is_certificate,
-            'is_interest'=>$this->is_interest($this->id,Auth::id())
+            'is_interest'=>$this->is_interest($this->id,Auth::id()),
+            'is_care' => $isCare
         ];
     }
     private function age($year){
