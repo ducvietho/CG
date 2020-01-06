@@ -26,14 +26,11 @@ class PatientHomeResource extends JsonResource
             'avatar'=>$this->avatar,
             'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
-            'age'=>$this->age($this->birthday),
+            'birthday'=>$this->birthday,
             'is_interest'=>$this->is_interest(Auth::id(),$this->id),
         ];
     }
 
-    private function age($year){
-        return date("Y") - $year;
-    }
     private function getCare($id_patient){
         $nures_care_id = Care::where('user_patient',$id_patient)->where('status',1)->pluck('user_nurse');
         $nures_care_name = null;

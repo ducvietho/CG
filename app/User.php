@@ -25,7 +25,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $table = 'users';
     protected $fillable = [
-        'user_name', 'password', 'name', 'email', 'phone', 'address_detail', 'avatar', 'type', 'block', 'code_address', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id','type_account','setting_care','is_register'
+        'user_name', 'password', 'name', 'email', 'phone', 'address_detail', 'avatar', 'type', 'block', 'code_address', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id', 'type_account', 'setting_care', 'is_register'
     ];
 
     /**
@@ -61,21 +61,24 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'code_address' => isset($data['city_code']) ? $data['city_code'] : '',
             'district_code' => isset($data['district_code']) ? $data['district_code'] : '',
             'address_detail' => isset($data['address']) ? $data['address'] : '',
-            'avatar' =>  env('AVATAR_DEFAULT'),
+            'avatar' => env('AVATAR_DEFAULT'),
             'type' => isset($data['type']) ? $data['type'] : 1,
             'fcm_token' => '',
             'provide_id' => isset($data['provide_id']) ? $data['provide_id'] : '',
             'type_account' => isset($data['type_account']) ? $data['type_account'] : 0,
             'setting_care' => 1,
-            'is_register' => 0
+            'is_register' => ($data['type'] == 2) ? 1 : 0
         ]);
         return $user;
     }
-    public function city(){
-        return $this->belongsTo(City::class,'code_address','code');
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'code_address', 'code');
     }
 
-    public function district(){
-        return $this->belongsTo(District::class,'district_code','code');
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_code', 'code');
     }
 }

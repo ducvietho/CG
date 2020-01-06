@@ -34,7 +34,7 @@ class PatientResource extends JsonResource
             'avatar'=>$this->avatar,
             'relationship' => $this->relationship,
             'gender' => $this->gender,
-            'age'=>$this->age($this->birthday),
+            'birthday'=>$this->birthday,
             'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'start_date' => $this->start_date,
@@ -48,9 +48,7 @@ class PatientResource extends JsonResource
             'is_care' => $isCare
         ];
     }
-    private function age($year){
-        return date("Y") - $year;
-    }
+
     private function is_interest($id_nures, $id_login){
         $record = NurseInterest::where('user_patient',$id_nures)->where('user_nurse',$id_login)->first();
         return ($record == null)?0:1;
