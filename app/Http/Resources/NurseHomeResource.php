@@ -25,7 +25,7 @@ class NurseHomeResource extends JsonResource
             'id' => $this->user_login,
             'name' => $this->user->name,
             'avatar' => $this->user->avatar,
-            'age' => $this->age($this->user->birthday),
+            'birthday' => $this->user->birthday,
             'city' => ($city_name == null) ? new \stdClass() : new CityResource($city_name),
             'district' => ($district == null) ? new \stdClass() : new DistrictResource($district),
             'is_interest' => $this->is_interest($this->user_login, Auth::id()),
@@ -33,10 +33,6 @@ class NurseHomeResource extends JsonResource
         ];
     }
 
-    private function age($year)
-    {
-        return date("Y") - $year;
-    }
 
     private function is_interest($id_nures, $id_login)
     {
