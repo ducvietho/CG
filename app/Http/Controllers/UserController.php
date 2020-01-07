@@ -134,7 +134,7 @@ class UserController extends Controller
      */
 
     public function getNoti(Request $request){
-        $notis = Notification::where('user_to',Auth::id())->paginate();
+        $notis = Notification::where('user_to',Auth::id())->orderBy('created_at','DESC')->paginate();
         if($request->page == 1){
             Notification::where('user_to',Auth::id())->update(['unwatch'=>1]);
         }
