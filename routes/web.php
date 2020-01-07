@@ -17,6 +17,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/import', 'LocationController@import');
     $router->post('/importDistrict', 'LocationController@importDistrict');
+    $router->post('/request/delete','CareController@delete');
 
     /**
      * Get list location city, district
@@ -36,6 +37,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('forgotPass','UserController@forgotPass');
     });
 
+
     $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
         $router->group(['prefix' => 'user'], function () use ($router) {
             $router->post('/changePass','UserController@changePass');
@@ -44,6 +46,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/settingCare','UserController@settingCare');
             $router->post('/notification','UserController@getNoti');
             $router->post('/destroy','UserController@cancelAccount');
+            $router->post('/requested','UserController@getListRequested');
+
         });
         $router->group(['prefix' => 'nurse'], function () use ($router) {
             $router->post('/home', 'NurseController@homePatient');

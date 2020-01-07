@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DeleteRequestJob;
 use Auth;
 use App\MyConst;
 use App\Models\Care;
@@ -10,6 +11,7 @@ use App\Jobs\RequestJob;
 use App\Jobs\AcceptedJob;
 use App\Jobs\UpdateRateJob;
 use App\Traits\ApiResponser;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use App\Http\Resources\CareDetailResource;
@@ -202,5 +204,18 @@ class CareController extends Controller
         $care->save();
         dispatch(new UpdateRateJob($care->user_nurse));
         return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Rate success");
+    }
+
+    /*
+     * Delete request after 30 days
+     */
+    public function delete(Request $request){
+        $now = date('Y-m-d');
+        $date = new DateTime($now);
+        $days = 30;
+        $requestID = Care::where('status',2)->where('created_at','<=',date_sub($date, date_interval_create_from_date_string($days.' days')))->pluck('id')->toArray();
+        dispatch(new DeleteRequestJob($requestID));
+        Care::whereIn('id',$requestID)->delete();
+        return $this->successResponseMessage(new \stdClass(), 200, "Delete request success");
     }
 }
