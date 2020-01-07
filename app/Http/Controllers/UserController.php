@@ -4,6 +4,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\CareShortCollection;
+use App\Models\Care;
 use App\User;
 use App\MyConst;
 use App\Models\Patient;
@@ -152,5 +154,15 @@ class UserController extends Controller
         }
         dispatch(new CancelAccountJob(Auth::id(),$type_user));
         return $this->successResponseMessage(new \stdClass(),200,'Cancel account success');
+    }
+
+    /*
+     * Get list requested
+     */
+
+    public function getListRequested(Request $request){
+        $user = User::find(Auth::id());
+        $list = Care::where('type',$user->type)->where('status',2)->paginate();
+        return $this->successResponseMessage(new CareShortCollection($list),200,'Get list requested success');
     }
 }

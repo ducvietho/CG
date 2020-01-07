@@ -45,14 +45,12 @@ class NurseProfileDetailResource extends JsonResource
             'rate'=>(float)($this->rate == null)?0:$this->rate,
             'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
-            'age'=>$this->age($user_login->birthday),
+            'birthday'=>$user_login->birthday,
             'is_interest'=>$this->is_interest($this->user_login,Auth::id()),
             'user_caring' => PatientShortResource::collection($user_caring)
         ];
     }
-    private function age($year){
-        return date("Y") - $year;
-    }
+
     private function is_interest($id_nures, $id_login){
         $record = PatientInterest::where('user_nurse',$id_nures)->where('user_login',$id_login)->first();
         return ($record == null)?0:1;

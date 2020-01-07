@@ -61,7 +61,7 @@ class CertificateController extends Controller
     }
     public function getCertificate(Request $request){
         if(Auth::user()->type != MyConst::NURSE){
-            return $this->successResponseMessage($data, 418, "Permision denined");
+            return $this->successResponseMessage(new \stdClass(), 418, "Permision denined");
         }
         $certificate = Certificate::where('user_login',Auth::id())->first();
         $data = [
