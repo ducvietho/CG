@@ -154,7 +154,7 @@ class Patient extends Model
                     ->orderByRaw("(abs(code_add - $district_code)) asc");
             }
             if ($city_code != "" && $city_code == "") {
-                return $query->whereRaw(SUBSTRING(`code_add`,1,2), $city_code);
+                return $query->whereRaw("SUBSTRING(`code_add`,1,2) = ?", $city_code);
             }
         }
     }
