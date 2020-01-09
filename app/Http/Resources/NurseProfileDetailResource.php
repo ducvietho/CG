@@ -42,7 +42,7 @@ class NurseProfileDetailResource extends JsonResource
             'end_time'=>$end_time,
             'is_certificate'=>(int)$this->is_certificate,
             'description'=>$this->description,
-            'rate'=>(float)($this->rate == null)?0:$this->rate,
+            'rate'=>(float)($this->rate == null)?0:round($this->rate,1),
             'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'birthday'=>$user_login->birthday,
