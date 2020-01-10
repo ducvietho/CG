@@ -67,7 +67,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'provide_id' => isset($data['provide_id']) ? $data['provide_id'] : '',
             'type_account' => isset($data['type_account']) ? $data['type_account'] : 0,
             'setting_care' => 1,
-            'is_register' => ($data['type'] == 2) ? 1 : 0
+            'is_register' => ($data['type'] == 2) ? 1 : 0,
+            'role' => isset($data['role']) ? $data['role'] : 0,
+
         ]);
         return $user;
     }

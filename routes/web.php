@@ -83,6 +83,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('sign','CertificateController@signCertificate');
             $router->post('get','CertificateController@getCertificate');
         });
+        $router->group(['prefix' => 'admin'], function () use ($router) {
+            $router->post('loginLogs','CMS\UserController@getLoginLogs');
+
+        });
+
         $router->post('care/detail','CareController@detail');
     });
 });

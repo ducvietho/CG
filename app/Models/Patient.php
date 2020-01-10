@@ -169,10 +169,24 @@ class Patient extends Model
     public function scopeAddress($query, $request)
     {
         if (isset($request->address)) {
-            $address = json_decode($request->address);
-            $count = sizeof($address);
+            $arrayAdd = json_decode($request->address);
+            $count = sizeof($arrayAdd);
             if ($count > 0) {
-                return $query->whereIn('address', $address);
+                $add1 = $arrayAdd[0];
+                $add2 = 0;
+                $add3 = 0;
+                if(sizeof($arrayAdd) >= 2){
+                    $add2 = $arrayAdd[1];
+                }
+                if(sizeof($arrayAdd) >= 3){
+                    $add3 = $arrayAdd[2];
+                }
+                $query = $query->where(function ($query) use ($add1,$add2,$add3){
+                    $query->where('address','like','%'.$add1.'%')
+                        ->orWhere('address','like','%'.$add2.'%')
+                        ->orWhere('address','like','%'.$add3.'%');
+                });
+                return $query;
             }
         }
 

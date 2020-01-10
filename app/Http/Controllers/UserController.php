@@ -162,7 +162,7 @@ class UserController extends Controller
 
     public function getListRequested(Request $request){
         $user = User::find(Auth::id());
-        $list = Care::where('type',$user->type)->where('status',2)->paginate();
+        $list = Care::where('type',$user->type)->where('user_login',Auth::id())->where('status',2)->orderBy('created_at','DESC')->paginate();
         return $this->successResponseMessage(new CareShortCollection($list),200,'Get list requested success');
     }
 }

@@ -118,6 +118,7 @@ class NurseController extends Controller
         $user_patient = Care::select('id','user_patient','status','user_nurse','user_login')
             ->where('status', $status)
             ->where('user_nurse', Auth::id())
+            ->orderBy('created_at','DESC')
             ->paginate();
        
         return $this->successResponseMessage(new CareCollection($user_patient), 200, "Get home success");
@@ -218,8 +219,22 @@ class NurseController extends Controller
             $query = $query->where('profile_nurse.code_add', 'like', $request->city_code . '%');
         }
 
-        if (isset($request->address) && $request->address > 0) {
-            $query = $query->whereIn('profile_nurse.address', json_decode($adddress));
+        if (isset($request->address) && sizeof(json_decode($request->address)) > 0) {
+            $arrayAdd = json_decode($request->address);
+            $add1 = $arrayAdd[0];
+            $add2 = 0;
+            $add3 = 0;
+            if(sizeof($arrayAdd) >= 2){
+                $add2 = $arrayAdd[1];
+            }
+            if(sizeof($arrayAdd) >= 3){
+                $add3 = $arrayAdd[2];
+            }
+            $query = $query->where(function ($query) use ($add1,$add2,$add3){
+                $query->where('address','like','%'.$add1.'%')
+                      ->orWhere('address','like','%'.$add2.'%')
+                      ->orWhere('address','like','%'.$add3.'%');
+            });
         }
 
         if (isset($request->start_date) && $request->start_date > 0) {
