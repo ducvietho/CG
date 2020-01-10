@@ -165,7 +165,7 @@ class PatientController extends Controller
     {
         $status = isset($request->status) ? $request->status : 1;
         $patients = Patient::where('user_login', Auth::id())->pluck('id')->toArray();
-        $nurseCare = Care::where('status', $status)->whereIn('user_patient', $patients)->paginate();
+        $nurseCare = Care::where('status', $status)->whereIn('user_patient', $patients)->orderBy('created_at','DESC')->paginate();
         return $this->successResponseMessage(new NurseCareCollection($nurseCare), 200, 'Get nurse care success');
     }
 }
