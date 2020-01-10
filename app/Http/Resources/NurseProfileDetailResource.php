@@ -35,7 +35,7 @@ class NurseProfileDetailResource extends JsonResource
             'user_name'=>$user_login->user_name,
             'gender'=>$user_login->gender,
             'nationality'=>(int)$this->nationality,
-            'address'=>(int)$this->address,
+            'address'=>$this->address,
             'start_date'=>$this->start_date,
             'end_date'=>$this->end_date,
             'start_time'=>(int)$this->start_time,
