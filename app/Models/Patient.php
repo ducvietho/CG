@@ -150,7 +150,7 @@ class Patient extends Model
             $district_code = $request->district_code;
             $city_code = $request->city_code;
             if (($district_code != 0 || $district_code != "") && $city_code != "") {
-                return $query->where('code_add', $district_code)->orWhere('code_add', 'like', $city_code . '%')
+                return $query->where('code_add', $district_code)->orwhereRaw("SUBSTRING(code_add,1,2) = ?", $city_code)
                     ->orderByRaw("(abs(code_add - $district_code)) asc");
             }
             if ($city_code != "" && $district_code == "") {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\DeleteRequestJob;
 use Auth;
+use DateTime;
 use App\MyConst;
 use App\Models\Care;
 use App\Models\Patient;
@@ -11,8 +11,8 @@ use App\Jobs\RequestJob;
 use App\Jobs\AcceptedJob;
 use App\Jobs\UpdateRateJob;
 use App\Traits\ApiResponser;
-use DateTime;
 use Illuminate\Http\Request;
+use App\Jobs\DeleteRequestJob;
 use Illuminate\Support\Facades\Config;
 use App\Http\Resources\CareDetailResource;
 
@@ -61,10 +61,16 @@ class CareController extends Controller
                 'status'=>MyConst::REQUESTING,
                 'rate'=>0
             ];
-            $care = Care::firstorCreate(array_merge($data_add,$data));
-            //Sending noti nurse request care
-            dispatch(new RequestJob(Auth::id(),0,$request->user_patient,MyConst::NOTI_NURSE_REQUEST,$care->id));
-            return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success");   
+            $data_merge = array_merge($data_add,$data);
+            $care = Care::where($data_merge)->first();
+            if($care != null){
+                return $this->successResponseMessage(new \stdClass(), 421, "Time has coincided");
+            }else{
+                $care = Care::firstorCreate(array_merge($data_add,$data));
+                //Sending noti nurse request care
+                dispatch(new RequestJob(Auth::id(),0,$request->user_patient,MyConst::NOTI_NURSE_REQUEST,$care->id));
+                return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success");   
+            } 
         }    
     }
     /**
@@ -119,10 +125,16 @@ class CareController extends Controller
                 'type'=>MyConst::PATIENT_REQUEST,
                 'status'=>MyConst::REQUESTING
             ];
-            $care = Care::firstorCreate(array_merge($data_add, $data));
+            $data_merge = array_merge($data_add, $data);
+            $care = Care::where($data_merge)->first();
+            if($care != null){
+                return $this->successResponseMessage(new \stdClass(), 421, "Time has coincided");
+            }else{
+                $care = Care::firstorCreate(array_merge($data_add, $data));
             //Sending noti nurse request care
-            dispatch(new RequestJob(Auth::id(),$request->user_nurse,$request->user_patient,MyConst::NOTI_PATIENT_REQUEST,$care->id));
-            return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success");
+                dispatch(new RequestJob(Auth::id(),$request->user_nurse,$request->user_patient,MyConst::NOTI_PATIENT_REQUEST,$care->id));
+                return $this->successResponseMessage(new CareDetailResource($care,$type_user), 200, "Request success");
+            }     
         } 
     }
     /**
