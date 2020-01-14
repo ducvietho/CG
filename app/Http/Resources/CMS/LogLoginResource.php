@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\CMS;
 
 
 use Illuminate\Http\Resources\Json\JsonResource;

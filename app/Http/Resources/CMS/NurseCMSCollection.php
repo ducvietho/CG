@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\CMS;
 
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class LogLoginCollection extends ResourceCollection
+class NurseCMSCollection extends ResourceCollection
 {
     public function toArray($request)
     {
@@ -15,8 +15,7 @@ class LogLoginCollection extends ResourceCollection
             $next_page = 0;
         }
         return [
-            'datas' => LogLoginResource::collection($this->collection),
-            'next_page' => $next_page,
+            'datas' => NurseCMSResource::collection($this->collection),
             'total_page' => $this->lastPage()
         ];
     }

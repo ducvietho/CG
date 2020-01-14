@@ -85,6 +85,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         });
         $router->group(['prefix' => 'admin'], function () use ($router) {
             $router->post('loginLogs','CMS\UserController@getLoginLogs');
+            $router->post('getUsers','CMS\UserController@getListUser');
+            $router->post('getPatients','CMS\PatientController@getPatients');
+            $router->post('getNurses','CMS\NurseController@getNurses');
 
         });
 

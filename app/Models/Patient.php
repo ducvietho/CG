@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\FullTextSearch;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,7 +66,10 @@ class Patient extends Model
     /**
      * Relationship table
      */
-
+    public function getLikes()
+    {
+        return $this->hasMany(NurseInterest::class, 'user_patient', 'id');
+    }
     /**
      * End relationship
      */
@@ -85,11 +89,15 @@ class Patient extends Model
      */
     public function scopeDate($query, $request)
     {
-        if (isset($request->start_date) && isset($request->end_date)) {
-            if ($request->start_date > 0 && $request->end_date > 0) {
-                return $query->whereBetween('start_date', [$request->start_date, $request->end_date])->whereBetween('end_date', [$request->start_date, $request->end_date]);
+        if (isset($request->start_date)) {
+            if ($request->start_date > 0 ) {
+               $query =  $query->where('start_date','>=', $request->start_date)->where('end_date', '>=', $request->start_date);
             }
         }
+        if ( isset($request->end_date)&& $request->end_date > 0){
+            $query = $query->where('end_date','<=' , $request->end_date)->where('start_date', '<=', $request->end_date);
+        }
+        return $query;
     }
 
     /**
@@ -159,7 +167,9 @@ class Patient extends Model
         }
         if (isset($request->city_code) && !isset($request->district_code)) {
             $city_code = $request->city_code;
-            return $query->whereRaw("SUBSTRING(code_add,1,2) = ?", $city_code); 
+            if($city_code != null){
+                return $query->whereRaw("SUBSTRING(code_add,1,2) = ?", $city_code);
+            }
         }
     }
 
