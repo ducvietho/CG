@@ -7,6 +7,7 @@ namespace App\Http\Controllers\CMS;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CMS\NurseCMSCollection;
 use App\Models\NurseProfile;
+use App\MyConst;
 use Illuminate\Http\Request;
 
 class NurseController extends Controller
@@ -35,7 +36,7 @@ class NurseController extends Controller
         $collection = $query->withCount(['getLikes'])
             ->orderBy('get_likes_count', 'desc')
             ->orderBy('profile_nurse.rate', 'DESC')
-            ->orderBy('profile_nurse.created_at', 'DESC')->paginate();
+            ->orderBy('profile_nurse.created_at', 'DESC')->paginate(MyConst::PAGINATE);
         return response()->json([
             'status' => 200,
             'action' => 'Search nurse success',

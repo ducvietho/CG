@@ -7,6 +7,7 @@ namespace App\Http\Controllers\CMS;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CMS\PatientCMSCollection;
 use App\Models\Patient;
+use App\MyConst;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,7 @@ class PatientController extends Controller
           ->location($request);
       $patient = $patient ->withCount(['getLikes'])
             ->orderBy('get_likes_count', 'desc')
-            ->paginate();
+            ->paginate(MyConst::PAGINATE);
       return $this->successResponseMessage(new PatientCMSCollection($patient),200,'Get list patient success');
   }
 

@@ -31,6 +31,7 @@ class MyConst{
     public const SERVER_KEY = "AAAARrj31es:APA91bHt5rD5EDcrzBSYf6cfxs-CIq5u3DVtVngaN9_BBQwuw3-a4sJCAVPF4KWUJKVoBeaOvx7NdM8T2oX8vgeD7KishgbhEfDcXpNFW9jvvHv1al-fo3Op7tqqCzK0cgAXnlmomF8D";
     //role user
     public const ADMIN =1;
+    public const PAGINATE = 10;
 
 
 }
