@@ -4,11 +4,11 @@
 namespace App\Http\Controllers\CMS;
 
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\LogLoginCollection;
 use App\Models\Log;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\LogLoginCollection;
 
 
 class UserController extends Controller
