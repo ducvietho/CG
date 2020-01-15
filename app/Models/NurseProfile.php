@@ -21,4 +21,8 @@ class NurseProfile extends Model
     public function user(){
         return $this->belongsTo(User::class,'user_login','id');
     }
+    public function getLikes()
+    {
+        return $this->hasMany(PatientInterest::class, 'user_nurse', 'user_login');
+    }
 }
