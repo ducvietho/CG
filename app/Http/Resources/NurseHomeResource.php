@@ -36,7 +36,9 @@ class NurseHomeResource extends JsonResource
             'birthday' => $this->user->birthday,
             'location' => $listAddress,
             'is_interest' => $this->is_interest($this->user_login, Auth::id()),
-            'rate'=>round($this->rate,1)
+            'rate'=>round($this->rate,1),
+            'salary' => $this->salary,
+            'type_salary' => $this->type_salary
         ];
     }
 

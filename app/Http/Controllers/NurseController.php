@@ -189,7 +189,7 @@ class NurseController extends Controller
         $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
             ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
         if (isset($request->district_code) && $request->district_code != null) {
-            $query = $query->where('profile_nurse.code_add', $request->district_code);
+            $query = $query->where('profile_nurse.code_add','like', '%'.$request->district_code.'%');
             if(sizeof($query->get())== 0){
                 $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
                     ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
@@ -217,7 +217,7 @@ class NurseController extends Controller
         }
 
         if (isset($request->city_code) && $request->city_code != null) {
-            $query = $query->where('profile_nurse.code_add', 'like', $request->city_code . '%');
+            $query = $query->where('profile_nurse.code_add', 'like', '%'.$request->city_code . '%');
         }
 
         if (isset($request->address) && sizeof(json_decode($request->address)) > 0) {
@@ -270,6 +270,12 @@ class NurseController extends Controller
         }
         if (isset($request->nationality)&& sizeof(json_decode($request->nationality)) > 0) {
             $query = $query->whereIn('profile_nurse.nationality', json_decode($request->nationality));
+        }
+        if (isset($request->salary)&& $request->salary > 0) {
+            $query = $query->where('profile_nurse.salary','<=', $request->salary);
+        }
+        if (isset($request->type_salary)&& $request->type_salary > 0) {
+            $query = $query->where('profile_nurse.type_salary', $request->type_salary);
         }
         $collection = $query->orderBy('profile_nurse.rate', 'DESC')->orderBy('profile_nurse.created_at', 'DESC')->paginate();
         return response()->json([

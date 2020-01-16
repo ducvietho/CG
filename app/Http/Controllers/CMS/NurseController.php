@@ -18,14 +18,14 @@ class NurseController extends Controller
             ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
 
         if (isset($request->district_code) && $request->district_code != null) {
-            $query = $query->where('profile_nurse.code_add', $request->district_code);
+            $query = $query->where('profile_nurse.code_add','like', '%'.$request->district_code.'%');
             if(sizeof($query->get())== 0){
                 $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
                     ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
             }
         }
         if (isset($request->city_code) && $request->city_code != null) {
-            $query = $query->where('profile_nurse.code_add', 'like', $request->city_code . '%');
+            $query = $query->where('profile_nurse.code_add', 'like', '%'.$request->city_code . '%');
         }
         if (isset($request->start_date) && $request->start_date > 0) {
             $query = $query->where('profile_nurse.start_date', '>=', $request->start_date);

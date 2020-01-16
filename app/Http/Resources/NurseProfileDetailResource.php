@@ -53,7 +53,9 @@ class NurseProfileDetailResource extends JsonResource
             'location'=>$listAddress,
             'birthday'=>$user_login->birthday,
             'is_interest'=>$this->is_interest($this->user_login,Auth::id()),
-            'user_caring' => PatientShortResource::collection($user_caring)
+            'user_caring' => PatientShortResource::collection($user_caring),
+            'salary' => $this->salary,
+            'type_salary' => $this->type_salary
         ];
     }
 
