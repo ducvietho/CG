@@ -32,8 +32,6 @@ class Login1Controller extends Controller
         if ($token == false) {
             return $this->successResponseMessage(new \stdClass(), 413, "Password inccorect");
         } else {
-
-
             if (isset($request->fcm_token)) {
                 $user->update([
                     'fcm_token' => $request->fcm_token,
