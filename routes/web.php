@@ -89,6 +89,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
                 $router->post('getUsers','CMS\UserController@getListUser');
                 $router->post('getPatients','CMS\PatientController@getPatients');
                 $router->post('getNurses','CMS\NurseController@getNurses');
+                $router->post('getRequests','CMS\CareController@getRequests');
             });
         });
 
