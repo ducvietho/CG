@@ -44,8 +44,9 @@ class NurseController extends Controller
     public function homePatient(Request $request)
     {
         $code_add = NurseProfile::select('code_add')->where('user_login',Auth::id())->first();
+        $code_add = json_decode($code_add->code_add);
         $data = DB::table('patients')
-            ->orderByRaw("(abs(code_add - $code_add->code_add)) asc")
+            ->orderByRaw("(abs(code_add - $code_add[0])) asc")
             ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get home success");
     }
@@ -63,7 +64,7 @@ class NurseController extends Controller
             'end_date' => 'required',
             'start_time' => 'required',
             'end_time' => 'required',
-            'address' => 'required|min:1|max:3',
+            'address' => 'required',
             'is_certificate' => 'required|min:0|max:1',
             'description' => 'string',
             'code_add'=>'required',
@@ -238,10 +239,10 @@ class NurseController extends Controller
         }
 
         if (isset($request->start_date) && $request->start_date > 0) {
-            $query = $query->where('profile_nurse.start_date', '<=', $start_date);
+            $query = $query->where('profile_nurse.start_date', '>=', $start_date);
         }
         if (isset($request->end_date) && $request->end_date > 0) {
-            $query = $query->where('profile_nurse.end_date', '>=', $end_date);
+            $query = $query->where('profile_nurse.end_date', '<=', $end_date);
         }
 
         if (isset($request->name)) {

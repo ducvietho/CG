@@ -91,11 +91,11 @@ class Patient extends Model
     {
         if (isset($request->start_date)) {
             if ($request->start_date > 0 ) {
-               $query =  $query->where('start_date','>=', $request->start_date)->where('end_date', '>=', $request->start_date);
+               $query =  $query->where('start_date','>=', $request->start_date);
             }
         }
         if ( isset($request->end_date)&& $request->end_date > 0){
-            $query = $query->where('end_date','<=' , $request->end_date)->where('start_date', '<=', $request->end_date);
+            $query = $query->where('end_date','<=' , $request->end_date);
         }
         return $query;
     }

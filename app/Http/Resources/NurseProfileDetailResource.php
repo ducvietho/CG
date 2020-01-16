@@ -3,14 +3,13 @@
 
 namespace App\Http\Resources;
 
-use Auth;
-use App\User;
 use App\Models\Care;
 use App\Models\City;
-use App\Models\Patient;
 use App\Models\District;
+use App\Models\Patient;
 use App\Models\PatientInterest;
-use App\Http\Resources\CityResource;
+use App\User;
+use Auth;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class NurseProfileDetailResource extends JsonResource
@@ -18,9 +17,17 @@ class NurseProfileDetailResource extends JsonResource
     
     public function toArray($request)
     {
-        $city_code = substr($this->code_add,0,2);
-        $city_name = City::where('code',$city_code)->first();
-        $district = District::where('code',$this->code_add)->first();
+        $codeCities = json_decode($this->code_add);
+        $listAddress = [];
+        foreach ($codeCities as $cityCode){
+            $location = new \stdClass();
+            $city_code = substr($cityCode, 0, 2);
+            $city_name = City::where('code', $city_code)->first();
+            $district = District::where('code', $cityCode)->first();
+            $location->city = ($city_name == null) ? new \stdClass() : new CityResource($city_name);
+            $location->district = ($district == null) ? new \stdClass() : new DistrictResource($district);
+            array_push($listAddress,$location);
+        }
         $user_login = User::find($this->user_login);
         $end_time = $this->end_time;
         if($this->end_time_1 > 0){
@@ -43,8 +50,7 @@ class NurseProfileDetailResource extends JsonResource
             'is_certificate'=>(int)$this->is_certificate,
             'description'=>$this->description,
             'rate'=>(float)($this->rate == null)?0:round($this->rate,1),
-            'city' =>($city_name == null)? new \stdClass() : new CityResource($city_name) ,
-            'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
+            'location'=>$listAddress,
             'birthday'=>$user_login->birthday,
             'is_interest'=>$this->is_interest($this->user_login,Auth::id()),
             'user_caring' => PatientShortResource::collection($user_caring)
