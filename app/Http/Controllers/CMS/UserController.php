@@ -14,7 +14,7 @@ use App\Traits\ProcessTextSearch;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -33,7 +33,7 @@ class UserController extends Controller
         if(isset($request->name) && $request->name != null){
             $query = $query->where('name','like',$this->fullText($request->name));
         }
-        $users = $query->orderBy('created_at','DESC')->paginate(MyConst::PAGINATE);
+        $users = $query->where('id','!=',Auth::id())->orderBy('created_at','DESC')->paginate(MyConst::PAGINATE);
         return $this->successResponseMessage(new UserCMSCollection($users),200,'Get list user success');
 
     }

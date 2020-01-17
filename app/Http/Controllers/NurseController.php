@@ -256,13 +256,13 @@ class NurseController extends Controller
         }
         if(isset($request->age)){
             $age = json_decode($request->age);
+
             if(sizeof($age)>0){
-                $query = $query->where('users.birthday', '<=', date("Y") - $age[0]);
+                $query = $query->where("users.birthday", '<=', strtotime(date("Y") - $age[0].'-12-31')/(24*60*60));
                 if(sizeof($age)>1){
-                    $query = $query->where('users.birthday', '>=', date("Y") - end($age));
+                    $query = $query->where('users.birthday', '>=', strtotime(date("Y") - end($age).'-1-1')/(24*60*60));
                 }
             }
-
         }
 
         if (isset($request->gender)&& sizeof(json_decode($request->gender)) > 0) {

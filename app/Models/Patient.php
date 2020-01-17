@@ -136,13 +136,13 @@ class Patient extends Model
             $age = json_decode($request->age);
             $count = sizeof($age);
             if ($count == 1) {
-                $birthday = date("Y") - $age[0];
+                $birthday = strtotime(date("Y") - $age[0].'-12-31')/(24*60*60);
                 return $query->whereRaw("birthday <=". $birthday);
             }
             if ($count > 1) {
                 $age = array_reverse($age);
-                $start_age = date("Y") - $age[0];
-                $end_age = date("Y") - $age[$count - 1];
+                $start_age = strtotime(date("Y") - $age[0].'-1-1')/(24*60*60);
+                $end_age = strtotime(date("Y") - $age[$count-1].'-12-31')/(24*60*60);
                 $age_range = [$start_age, $end_age];
                 return $query->whereBetween('birthday', $age_range);
             }

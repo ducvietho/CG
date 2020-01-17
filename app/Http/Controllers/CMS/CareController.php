@@ -6,6 +6,7 @@ namespace App\Http\Controllers\CMS;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CMS\RequestCMSCollection;
+use App\Http\Resources\CMS\RequestDetailCMSResource;
 use App\Models\Care;
 use App\MyConst;
 use App\Traits\ApiResponser;
@@ -31,5 +32,11 @@ class CareController extends Controller
         return $this->successResponseMessage(new RequestCMSCollection($collection), 200, 'Get request success');
 
 
+    }
+
+    public function requestDetail(Request $request){
+        $idRequest = $request->id_request;
+        $care = Care::findOrFail($idRequest);
+        return $this->successResponseMessage(new RequestDetailCMSResource($care), 200, 'Get detail request success');
     }
 }
