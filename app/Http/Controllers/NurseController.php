@@ -44,8 +44,9 @@ class NurseController extends Controller
     public function homePatient(Request $request)
     {
         $code_add = NurseProfile::select('code_add')->where('user_login',Auth::id())->first();
+        $code_add = json_decode($code_add->code_add);
         $data = DB::table('patients')
-            ->orderByRaw("(abs(code_add - $code_add->code_add)) asc")
+            ->orderByRaw("(abs(code_add - $code_add[0])) asc")
             ->paginate();
         return $this->successResponseMessage(new PatientCollection($data), 200, "Get home success");
     }
@@ -63,7 +64,7 @@ class NurseController extends Controller
             'end_date' => 'required',
             'start_time' => 'required',
             'end_time' => 'required',
-            'address' => 'required|min:1|max:3',
+            'address' => 'required',
             'is_certificate' => 'required|min:0|max:1',
             'description' => 'string',
             'code_add'=>'required',
@@ -188,7 +189,7 @@ class NurseController extends Controller
         $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
             ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
         if (isset($request->district_code) && $request->district_code != null) {
-            $query = $query->where('profile_nurse.code_add', $request->district_code);
+            $query = $query->where('profile_nurse.code_add','like', '%'.$request->district_code.'%');
             if(sizeof($query->get())== 0){
                 $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
                     ->select('profile_nurse.*', 'users.name', 'users.user_name', 'users.birthday', 'users.gender');
@@ -216,7 +217,7 @@ class NurseController extends Controller
         }
 
         if (isset($request->city_code) && $request->city_code != null) {
-            $query = $query->where('profile_nurse.code_add', 'like', $request->city_code . '%');
+            $query = $query->where('profile_nurse.code_add', 'like', '%'.$request->city_code . '%');
         }
 
         if (isset($request->address) && sizeof(json_decode($request->address)) > 0) {
@@ -238,10 +239,10 @@ class NurseController extends Controller
         }
 
         if (isset($request->start_date) && $request->start_date > 0) {
-            $query = $query->where('profile_nurse.start_date', '<=', $start_date);
+            $query = $query->where('profile_nurse.start_date', '>=', $start_date);
         }
         if (isset($request->end_date) && $request->end_date > 0) {
-            $query = $query->where('profile_nurse.end_date', '>=', $end_date);
+            $query = $query->where('profile_nurse.end_date', '<=', $end_date);
         }
 
         if (isset($request->name)) {
@@ -256,12 +257,14 @@ class NurseController extends Controller
         if(isset($request->age)){
             $age = json_decode($request->age);
             if(sizeof($age)>0){
-                $query = $query->where('users.birthday', '<=', date("Y") - $age[0]);
-                if(sizeof($age)>1){
-                    $query = $query->where('users.birthday', '>=', date("Y") - end($age));
+                if(sizeof($age) == 1){
+                    $query = $query->where("users.birthday", '>=', strtotime(date("Y") - $age[0].'-1-1')/(24*60*60));
+                }else{
+                    $age_range = [strtotime(date("Y") - end($age).'-1-1')/(24*60*60),strtotime(date("Y") - $age[0].'-12-31')/(24*60*60)];
+                    $query = $query->whereBetween("users.birthday", $age_range);
+
                 }
             }
-
         }
 
         if (isset($request->gender)&& sizeof(json_decode($request->gender)) > 0) {
@@ -269,6 +272,12 @@ class NurseController extends Controller
         }
         if (isset($request->nationality)&& sizeof(json_decode($request->nationality)) > 0) {
             $query = $query->whereIn('profile_nurse.nationality', json_decode($request->nationality));
+        }
+        if (isset($request->salary)&& $request->salary > 0) {
+            $query = $query->where('profile_nurse.salary','<=', $request->salary);
+        }
+        if (isset($request->type_salary)&& $request->type_salary > 0) {
+            $query = $query->where('profile_nurse.type_salary', $request->type_salary);
         }
         $collection = $query->orderBy('profile_nurse.rate', 'DESC')->orderBy('profile_nurse.created_at', 'DESC')->paginate();
         return response()->json([

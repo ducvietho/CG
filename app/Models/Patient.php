@@ -91,11 +91,11 @@ class Patient extends Model
     {
         if (isset($request->start_date)) {
             if ($request->start_date > 0 ) {
-               $query =  $query->where('start_date','>=', $request->start_date)->where('end_date', '>=', $request->start_date);
+               $query =  $query->where('start_date','>=', $request->start_date);
             }
         }
         if ( isset($request->end_date)&& $request->end_date > 0){
-            $query = $query->where('end_date','<=' , $request->end_date)->where('start_date', '<=', $request->end_date);
+            $query = $query->where('end_date','<=' , $request->end_date);
         }
         return $query;
     }
@@ -136,13 +136,13 @@ class Patient extends Model
             $age = json_decode($request->age);
             $count = sizeof($age);
             if ($count == 1) {
-                $birthday = date("Y") - $age[0];
-                return $query->whereRaw("birthday <=". $birthday);
+                $birthday = strtotime(date("Y") - $age[0].'-1-1')/(24*60*60);
+                return $query->whereRaw("birthday >=". $birthday);
             }
             if ($count > 1) {
                 $age = array_reverse($age);
-                $start_age = date("Y") - $age[0];
-                $end_age = date("Y") - $age[$count - 1];
+                $start_age = strtotime(date("Y") - $age[0].'-1-1')/(24*60*60);
+                $end_age = strtotime(date("Y") - $age[$count-1].'-12-31')/(24*60*60);
                 $age_range = [$start_age, $end_age];
                 return $query->whereBetween('birthday', $age_range);
             }

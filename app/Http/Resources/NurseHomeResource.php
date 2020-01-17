@@ -17,19 +17,28 @@ class NurseHomeResource extends JsonResource
 {
     public function toArray($request)
     {
+        $codeCities = json_decode($this->code_add);
+        $listAddress = [];
+        foreach ($codeCities as $cityCode){
+            $location = new \stdClass();
+            $city_code = substr($cityCode, 0, 2);
+            $city_name = City::where('code', $city_code)->first();
+            $district = District::where('code', $cityCode)->first();
+            $location->city = ($city_name == null) ? new \stdClass() : new CityResource($city_name);
+            $location->district = ($district == null) ? new \stdClass() : new DistrictResource($district);
+            array_push($listAddress,$location);
+        }
 
-        $city_code = substr($this->code_add, 0, 2);
-        $city_name = City::where('code', $city_code)->first();
-        $district = District::where('code', $this->code_add)->first();
         return [
             'id' => $this->user_login,
             'name' => $this->user->name,
             'avatar' => $this->user->avatar,
             'birthday' => $this->user->birthday,
-            'city' => ($city_name == null) ? new \stdClass() : new CityResource($city_name),
-            'district' => ($district == null) ? new \stdClass() : new DistrictResource($district),
+            'location' => $listAddress,
             'is_interest' => $this->is_interest($this->user_login, Auth::id()),
-            'rate'=>round($this->rate,1)
+            'rate'=>round($this->rate,1),
+            'salary' => $this->salary,
+            'type_salary' => $this->type_salary
         ];
     }
 
