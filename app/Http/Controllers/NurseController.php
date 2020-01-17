@@ -256,11 +256,13 @@ class NurseController extends Controller
         }
         if(isset($request->age)){
             $age = json_decode($request->age);
-
             if(sizeof($age)>0){
-                $query = $query->where("users.birthday", '<=', strtotime(date("Y") - $age[0].'-12-31')/(24*60*60));
-                if(sizeof($age)>1){
-                    $query = $query->where('users.birthday', '>=', strtotime(date("Y") - end($age).'-1-1')/(24*60*60));
+                if(sizeof($age) == 1){
+                    $query = $query->where("users.birthday", '>=', strtotime(date("Y") - $age[0].'-1-1')/(24*60*60));
+                }else{
+                    $age_range = [strtotime(date("Y") - end($age).'-1-1')/(24*60*60),strtotime(date("Y") - $age[0].'-12-31')/(24*60*60)];
+                    $query = $query->whereBetween("users.birthday", $age_range);
+
                 }
             }
         }

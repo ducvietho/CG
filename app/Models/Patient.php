@@ -136,8 +136,8 @@ class Patient extends Model
             $age = json_decode($request->age);
             $count = sizeof($age);
             if ($count == 1) {
-                $birthday = strtotime(date("Y") - $age[0].'-12-31')/(24*60*60);
-                return $query->whereRaw("birthday <=". $birthday);
+                $birthday = strtotime(date("Y") - $age[0].'-1-1')/(24*60*60);
+                return $query->whereRaw("birthday >=". $birthday);
             }
             if ($count > 1) {
                 $age = array_reverse($age);
