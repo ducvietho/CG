@@ -18,7 +18,6 @@ class RequestDetailCMSResource extends JsonResource
             'id_request' => $this->id,
             'nurse' => $this->formatNurse($this->user_nurse),
             'patient' => $this->formatPatient($user_patient),
-            'user_login' => $this->formatUserLogin($this->user_login,$this->type),
             'status' => $this->status,
             'type' => $this->type,
             'start_date' => $this->start_date,
@@ -32,10 +31,12 @@ class RequestDetailCMSResource extends JsonResource
 
     protected function formatPatient($patient)
     {
+        $user = User::find($patient->user_login);
         return [
             'id' => $patient->id,
             'name' => $patient->name,
-            'birthday' => $patient->birthday,
+            'phone' => $user->phone,
+            'email' => $user->email,
         ];
     }
 
@@ -45,22 +46,10 @@ class RequestDetailCMSResource extends JsonResource
         return [
             'id' => $user->id,
             'name' => $user->name,
-            'avatar' => $user->avatar,
             'phone' => $user->phone,
             'email' => $user->email,
         ];
     }
 
-    protected function formatUserLogin($user_login,$type)
-    {
-        $format = new \stdClass();
-        if($type != 1){
-            $user = User::select('id', 'name', 'avatar','phone','email')->find($user_login);
-            $format->id = $user->id;
-            $format->name = $user->name;
-            $format->phone = $user->phone;
-            $format->email = $user->email;
-        }
-        return $format;
-    }
+
 }
