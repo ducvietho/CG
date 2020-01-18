@@ -35,6 +35,7 @@ class RequestDetailCMSResource extends JsonResource
         return [
             'id' => $patient->id,
             'name' => $patient->name,
+            'birthday'=>$patient->birthday,
             'phone' => $user->phone,
             'email' => $user->email,
         ];
