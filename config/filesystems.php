@@ -64,9 +64,9 @@ return [
             'root' => public_path('avatars'),
 
         ],
-        'covers' => [
+        'banner' => [
             'driver' => 'local',
-            'root' => public_path('covers'),
+            'root' => public_path('banner'),
 
         ],
 
