@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 
 use App\Models\Care;
 use App\Models\Notification;
-use App\Models\NurseProfile;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -19,7 +18,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'user_name' => $this->user_name,
+            'user_id' => $this->user_id,
             'email' => $this->email,
             'address_detail' => ($this->address_detail != null) ? $this->address_detail : '',
             'avatar' => $this->avatar,
