@@ -13,7 +13,7 @@ class UpdateProfileNurseTable1 extends Migration
      */
     public function up()
     {
-        Schema::table('patients', function (Blueprint $table) {
+        Schema::table('profile_nurse', function (Blueprint $table) {
 
             $table->string('is_certificate')->default('[]')->change();
         });

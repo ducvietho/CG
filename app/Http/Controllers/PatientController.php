@@ -73,10 +73,12 @@ class PatientController extends Controller
         $end_date = isset($request->end_date) ? $request->end_date : $patient->end_date;
         $end_time = isset($request->end_time) ? $request->end_time : $patient->end_time;
         $start_time = isset($request->start_time) ? $request->start_time : $patient->start_time;
-        $end_time_1 =0;
+        $salary = isset($request->salary) ? $request->salary : $patient->salary;
+        $type_salary = isset($request->type_salary) ? $request->type_salary : $patient->type_salary;
+        $end_time_1 = 0;
         if ($request->start_time > $request->end_time) {
-            $end_time_1 =  $end_time;
-            $end_time =  1440;
+            $end_time_1 = $end_time;
+            $end_time = 1440;
         }
         $address = isset($request->address) ? $request->address : $patient->address;
         $is_certificate = isset($request->is_certificate) ? $request->is_certificate : $patient->is_certificate;
@@ -88,7 +90,7 @@ class PatientController extends Controller
                 $avatar = $this->upload(MyConst::AVATAR, $request->avatar, Auth::id());
             }
         }
-        $patient = Patient::updatePatient($request->id, $name, $relationship, $gender, $birthday, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note, $avatar,$nationality,$end_time_1);
+        $patient = Patient::updatePatient($request->id, $name, $relationship, $gender, $birthday, $code_add, $start_date, $end_date, $start_time, $end_time, $address, $is_certificate, $note, $avatar, $nationality, $end_time_1, $salary, $type_salary);
         return $this->successResponseMessage(new PatientResource($patient), 200, 'Update patient success');
 
     }
@@ -165,7 +167,7 @@ class PatientController extends Controller
     {
         $status = isset($request->status) ? $request->status : 1;
         $patients = Patient::where('user_login', Auth::id())->pluck('id')->toArray();
-        $nurseCare = Care::where('status', $status)->whereIn('user_patient', $patients)->orderBy('created_at','DESC')->paginate();
+        $nurseCare = Care::where('status', $status)->whereIn('user_patient', $patients)->orderBy('created_at', 'DESC')->paginate();
         return $this->successResponseMessage(new NurseCareCollection($nurseCare), 200, 'Get nurse care success');
     }
 }
