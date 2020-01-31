@@ -50,7 +50,7 @@ class NurseProfileDetailResource extends JsonResource
             'end_date'=>$this->end_date,
             'start_time'=>(int)$this->start_time,
             'end_time'=>$end_time,
-            'is_certificate'=>(int)$this->is_certificate,
+            'is_certificate'=>$this->is_certificate,
             'description'=>$this->description,
             'rate'=>(count($rate) >0)?round(array_sum($rate)/count($rate),1):0,
             'location'=>$listAddress,
