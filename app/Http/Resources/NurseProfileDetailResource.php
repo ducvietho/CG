@@ -35,6 +35,9 @@ class NurseProfileDetailResource extends JsonResource
         }
         $patient = Care::where('user_nurse',$this->user_login)->where('status',1)->pluck('user_patient')->toArray();
         $user_caring = Patient::whereIn('id',$patient)->get();
+        $rate = Care::where('user_nurse',$this->user_login)
+            ->where('rate','>',0)
+            ->pluck('rate')->toArray();
         return [
             'id'=>$this->user_login,
             'name' => $user_login->name,
@@ -47,9 +50,9 @@ class NurseProfileDetailResource extends JsonResource
             'end_date'=>$this->end_date,
             'start_time'=>(int)$this->start_time,
             'end_time'=>$end_time,
-            'is_certificate'=>(int)$this->is_certificate,
+            'is_certificate'=>$this->is_certificate,
             'description'=>$this->description,
-            'rate'=>(float)($this->rate == null)?0:round($this->rate,1),
+            'rate'=>(count($rate) >0)?round(array_sum($rate)/count($rate),1):0,
             'location'=>$listAddress,
             'birthday'=>$user_login->birthday,
             'is_interest'=>$this->is_interest($this->user_login,Auth::id()),

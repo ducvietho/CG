@@ -28,7 +28,9 @@ class NurseHomeResource extends JsonResource
             $location->district = ($district == null) ? new \stdClass() : new DistrictResource($district);
             array_push($listAddress,$location);
         }
-
+        $rate = Care::where('user_nurse',$this->user_login)
+            ->where('rate','>',0)
+            ->pluck('rate')->toArray();
         return [
             'id' => $this->user_login,
             'name' => $this->user->name,
@@ -36,7 +38,7 @@ class NurseHomeResource extends JsonResource
             'birthday' => $this->user->birthday,
             'location' => $listAddress,
             'is_interest' => $this->is_interest($this->user_login, Auth::id()),
-            'rate'=>round($this->rate,1),
+            'rate'=>(count($rate) >0)?round(array_sum($rate)/count($rate),1):0,
             'salary' => $this->salary,
             'type_salary' => $this->type_salary
         ];

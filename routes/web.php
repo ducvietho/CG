@@ -92,9 +92,17 @@ $router->group(['prefix' => 'api'], function () use ($router) {
                 $router->post('getRequests','CMS\CareController@getRequests');
                 $router->post('request/detail','CMS\CareController@requestDetail');
                 $router->post('patient/history','CMS\PatientController@getHistoryRequest');
+                $router->group(['prefix' => 'banner'], function () use ($router) {
+                    $router->post('create','CMS\BannerController@create');
+                    $router->post('update','CMS\BannerController@update');
+                    $router->post('delete','CMS\BannerController@delete');
+                    $router->post('get','CMS\BannerController@getList');
+                });
+
             });
         });
 
         $router->post('care/detail','CareController@detail');
+        $router->post('banner/get','BannerController@get');
     });
 });
