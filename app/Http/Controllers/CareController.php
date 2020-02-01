@@ -64,7 +64,7 @@ class CareController extends Controller
             $data_merge = array_merge($data_add,$data);
             $care = Care::where($data_merge)->first();
             if($care != null){
-                return $this->successResponseMessage(new \stdClass(), 421, "Time has coincided");
+                return $this->successResponseMessage(new \stdClass(), 420, "Time has coincided");
             }else{
                 $care = Care::firstorCreate(array_merge($data_add,$data));
                 //Sending noti nurse request care
