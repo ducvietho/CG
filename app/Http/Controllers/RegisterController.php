@@ -80,4 +80,17 @@ class RegisterController extends Controller
         }
         return $this->successResponseMessage($data,200,'Check user ID success');
     }
+
+    /*
+     * Check Email
+     */
+    public function checkEmail(Request $request){
+        $email = $request->email;
+        $user = User::where('email',$email)->first();
+        $data['check'] = 0;
+        if($user != null){
+            $data['check'] = 1;
+        }
+        return $this->successResponseMessage($data,200,'Check Email success');
+    }
 }
