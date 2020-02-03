@@ -14,6 +14,11 @@ class BannerController extends Controller
     use ApiResponser;
     public function get(Request $request){
         $banner = Banner::where('active',1)->orderBy('created_at','DESC')->first();
-        return $this->successResponseMessage(new BannerResource($banner),200,'Get banner success');
+        if($banner != null){
+            return $this->successResponseMessage(new BannerResource($banner),200,'Get banner success');
+        }else{
+            return $this->successResponseMessage(new \stdClass(),200,'Get banner success');
+        }
+
     }
 }
