@@ -27,6 +27,7 @@ class PatientController extends Controller
       $patient->date($request)
           ->location($request);
       $patient = $patient ->withCount(['getLikes'])
+            ->orderBy('created_at','desc')
             ->orderBy('get_likes_count', 'desc')
             ->paginate(MyConst::PAGINATE);
       return $this->successResponseMessage(new PatientCMSCollection($patient),200,'Get list patient success');

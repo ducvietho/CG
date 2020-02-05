@@ -42,9 +42,10 @@ class NurseController extends Controller
         }
 
         $collection = $query->withCount(['getLikes'])
+            ->orderBy('profile_nurse.created_at', 'DESC')
             ->orderBy('get_likes_count', 'desc')
             ->orderBy('profile_nurse.rate', 'DESC')
-            ->orderBy('profile_nurse.created_at', 'DESC')->paginate(MyConst::PAGINATE);
+            ->paginate(MyConst::PAGINATE);
         return response()->json([
             'status' => 200,
             'action' => 'Search nurse success',
