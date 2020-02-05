@@ -68,7 +68,7 @@ class NurseController extends Controller
             'start_time' => 'required',
             'end_time' => 'required',
             'address' => 'required',
-            'is_certificate' => 'required|min:0|max:1',
+            'is_certificate' => 'required',
             'description' => 'string',
             'code_add' => 'required',
             'nationality' => 'required'

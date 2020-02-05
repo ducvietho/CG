@@ -3,22 +3,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\DeletePatientJob;
-use App\Traits\MediaClass;
-use Auth;
-use App\User;
-use App\MyConst;
-use App\Models\Care;
-use App\Models\Patient;
-use App\Models\NurseProfile;
-use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
-use App\Models\PatientInterest;
-use App\Http\Resources\PatientResource;
-use App\Http\Resources\PatientCollection;
 use App\Http\Resources\NurseCareCollection;
 use App\Http\Resources\NurseHomeCollection;
 use App\Http\Resources\PatientListCollection;
+use App\Http\Resources\PatientResource;
+use App\Jobs\DeletePatientJob;
+use App\Models\Care;
+use App\Models\NurseProfile;
+use App\Models\Patient;
+use App\Models\PatientInterest;
+use App\MyConst;
+use App\Traits\ApiResponser;
+use App\Traits\MediaClass;
+use App\User;
+use Auth;
+use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
@@ -38,7 +37,7 @@ class PatientController extends Controller
             'end_time' => 'required',
             'start_time' => 'required',
             'address' => 'required',
-            'is_certificate' => 'required|min:0|max:1',
+            'is_certificate' => 'required',
             'avatar' => 'string'
         ]);
         if ($request->start_time > $request->end_time) {
