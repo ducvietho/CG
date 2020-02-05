@@ -19,6 +19,11 @@ class PatientController extends Controller
   use ApiResponser;
   public function getPatients(Request $request){
       $patient = Patient::query();
+      if (isset($request->name)) {
+          if ($request->name != "") {
+              $patient = $patient->search($request->name);
+          }
+      }
       $patient->date($request)
           ->location($request);
       $patient = $patient ->withCount(['getLikes'])

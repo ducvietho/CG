@@ -24,7 +24,7 @@ class CareDetailResource extends JsonResource
     {
         switch ($this->type_user) {
             case MyConst::NURSER_REQUEST:
-                $user_patient = Patient::select('name', 'id', 'user_login', 'avatar')->find($this->user_patient);
+                $user_patient = Patient::select('name', 'id', 'user_login', 'avatar','gender','birthday')->find($this->user_patient);
                 return [
                     'id_request' => $this->id,
                     'user' => $this->formatPatient($user_patient),

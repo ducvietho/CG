@@ -62,6 +62,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/nureInterestAction', 'NurseController@nureInterestAction');
             $router->post('request','CareController@requestCare');
             $router->post('accept','CareController@nurseAcept');
+            $router->post('refuse','CareController@nurseRefuse');
             $router->post('complete','CareController@nurseComplete');
         });
         $router->group(['prefix' => 'patient'], function () use ($router) {
@@ -77,6 +78,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/manager', 'PatientController@manage');
             $router->post('/search', 'NurseController@searchNurse');
             $router->post('request','CareController@patientRequest');
+            $router->post('refuse','CareController@patientRefuse');
             $router->post('accept','CareController@patientAcept');
             $router->post('rate','CareController@patientRating');
         });
@@ -104,6 +106,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         });
 
         $router->post('care/detail','CareController@detail');
+        $router->post('care/getReason','CareController@getReason');
         $router->post('banner/get','BannerController@get');
     });
 });

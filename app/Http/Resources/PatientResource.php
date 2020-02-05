@@ -45,7 +45,9 @@ class PatientResource extends JsonResource
             'note' => ($this->note != null) ? $this->note : '',
             'is_certificate' => $this->is_certificate,
             'is_interest'=>$this->is_interest($this->id,Auth::id()),
-            'is_care' => $isCare
+            'is_care' => $isCare,
+            'salary' => $this->salary,
+            'type_salary' => $this->type_salary
         ];
     }
 

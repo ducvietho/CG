@@ -8,10 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CMS\NurseCMSCollection;
 use App\Models\NurseProfile;
 use App\MyConst;
+use App\Traits\ProcessTextSearch;
 use Illuminate\Http\Request;
 
 class NurseController extends Controller
 {
+    use ProcessTextSearch;
     public function getNurses(Request $request)
     {
         $query = NurseProfile::join('users', 'profile_nurse.user_login', 'users.id')
@@ -26,6 +28,11 @@ class NurseController extends Controller
         }
         if (isset($request->city_code) && $request->city_code != null) {
             $query = $query->where('profile_nurse.code_add', 'like', '%'.$request->city_code . '%');
+        }
+        if (isset($request->name)) {
+            if ($request->name != "") {
+                $query = $query->where('users.name','like',$this->fullText($request->name));
+            }
         }
         if (isset($request->start_date) && $request->start_date > 0) {
             $query = $query->where('profile_nurse.start_date', '>=', $request->start_date);

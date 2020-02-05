@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DeletePatientJob;
 use App\Traits\MediaClass;
 use Auth;
 use App\User;
@@ -99,6 +100,7 @@ class PatientController extends Controller
     {
         $patient = Patient::find($request->id);
         $patient->delete();
+        $this->dispatch(new DeletePatientJob($request->id));
         return $this->successResponseMessage(new \stdClass(), 200, 'Delete patient success');
     }
 

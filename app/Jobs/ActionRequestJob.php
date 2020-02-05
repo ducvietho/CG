@@ -8,7 +8,7 @@ use App\Models\Notification;
 use App\Traits\PushNotiController;
 use App\Http\Resources\NotificationResource;
 
-class AcceptedJob extends Job
+class ActionRequestJob extends Job
 {
     use PushNotiController;
     /**
