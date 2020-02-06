@@ -40,7 +40,8 @@ class NurseHomeResource extends JsonResource
             'is_interest' => $this->is_interest($this->user_login, Auth::id()),
             'rate'=>(count($rate) >0)?round(array_sum($rate)/count($rate),1):0,
             'salary' => $this->salary,
-            'type_salary' => $this->type_salary
+            'type_salary' => $this->type_salary,
+            'gender'=>$this->user->gender
         ];
     }
 
