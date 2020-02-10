@@ -12,7 +12,7 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         $noti = Notification::where('user_to',$this->id)->where('unwatch',0)->pluck('id')->toArray();
-        $rate = Care::where('user_nurse',$this->user_login)
+        $rate = Care::where('user_nurse',$this->id)
             ->where('rate','>',0)
             ->pluck('rate')->toArray();
         return [
