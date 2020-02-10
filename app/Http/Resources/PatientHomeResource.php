@@ -28,7 +28,9 @@ class PatientHomeResource extends JsonResource
             'district'=> ($district == null) ? new \stdClass() : new DistrictResource($district),
             'birthday'=>$this->birthday,
             'is_interest'=>$this->is_interest(Auth::id(),$this->id),
-            'gender' =>$this->gender
+            'gender' =>$this->gender,
+            'salary' => $this->salary,
+            'type_salary' => $this->type_salary
         ];
     }
 
