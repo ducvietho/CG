@@ -15,6 +15,7 @@ class BannerCMSResource extends JsonResource
             'image'=>$this->image,
             'active' => (int)$this->active,
             'name'=> $this->name,
+            'link' => ($this->link != null) ? $this->link : '',
             'user' =>[
                 'id' => $this->user->id,
                 'name' =>$this->user->name
