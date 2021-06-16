@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return 'success';
 });
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/import', 'LocationController@import');
