@@ -52,13 +52,13 @@ class Login1Controller extends Controller
             }
             return $this->successResponseMessage($data, 200, "Login success");
         }
-  
+
     }
 
     public function loginSocial(Request $request)
     {
         $user = User::where('provide_id', $request->provide_id)->where('type_account', $request->type_account)->firstorFail();
-       
+
         $token = $this->jwt->fromUser($user);
         if (isset($request->fcm_token)) {
             $user->update([
@@ -72,7 +72,7 @@ class Login1Controller extends Controller
         Log::create($request->all());
         if ($user->is_register == 0) {
             return $this->successResponseMessage($data, 412, "You need to register a profile");
-        } 
+        }
         if($user->type == MyConst::NURSE && $user->is_sign ==0){
             return $this->successResponseMessage($data, 416, "The nurse needs to sign the form");
         }

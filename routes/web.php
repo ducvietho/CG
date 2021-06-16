@@ -15,8 +15,6 @@ $router->get('/', function () use ($router) {
     return 'success';
 });
 $router->group(['prefix' => 'api'], function () use ($router) {
-    $router->post('/import', 'LocationController@import');
-    $router->post('/importDistrict', 'LocationController@importDistrict');
     $router->post('/request/delete','CareController@delete');
 
     /**
