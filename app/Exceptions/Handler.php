@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use ErrorException;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use App\Traits\ApiResponser;
 use Illuminate\Database\QueryException;
@@ -59,7 +60,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-         dd($exception);
+        Log::info($exception);
+//         dd($exception);
         if ($exception instanceof ModelNotFoundException) {
             $model = strtolower(class_basename($exception->getModel()));
             return $this->errorResponse("Does not exits any instance of {$model} with the given", 404);
