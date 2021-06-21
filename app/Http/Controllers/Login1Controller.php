@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 
@@ -13,6 +14,7 @@ use App\Http\Resources\UserResource;
 class Login1Controller extends Controller
 {
     use ApiResponser;
+
     protected $jwt;
 
     /**
@@ -28,7 +30,8 @@ class Login1Controller extends Controller
     public function login(Request $request)
     {
         $this->validate($request, [
-           'user_id'=>'required'
+            'user_id' => 'required',
+            'password' => 'required|string'
         ]);
         $user = User::where('user_id', $request->get('user_id'))->firstorFail();
         $token = $this->jwt->attempt($request->only('user_id', 'password'));
@@ -42,15 +45,15 @@ class Login1Controller extends Controller
             }
             $data['token'] = $token;
             $data['user'] = new UserResource($user);
-            if($user->role == MyConst::ADMIN){
+            if ($user->role == MyConst::ADMIN) {
                 return $this->successResponseMessage($data, 200, "Login success");
             }
-            $request->request->set('user_login',$user->id);
+            $request->request->set('user_login', $user->id);
             Log::create($request->all());
             if ($user->is_register == 0) {
                 return $this->successResponseMessage($data, 412, "You need to register a profile");
             }
-            if($user->type == MyConst::NURSE && $user->is_sign ==0){
+            if ($user->type == MyConst::NURSE && $user->is_sign == 0) {
                 return $this->successResponseMessage($data, 416, "The nurse needs to sign the form");
             }
             return $this->successResponseMessage($data, 200, "Login success");
@@ -61,8 +64,8 @@ class Login1Controller extends Controller
     public function loginSocial(Request $request)
     {
         $this->validate($request, [
-            'provide_id'=>'required',
-            'type_account'=>'required|numeric'
+            'provide_id' => 'required',
+            'type_account' => 'required|numeric'
         ]);
         $user = User::where('provide_id', $request->get('provide_id'))->where('type_account', $request->get('type_account'))->firstorFail();
 
@@ -75,12 +78,12 @@ class Login1Controller extends Controller
         }
         $data['token'] = $token;
         $data['user'] = new UserResource($user);
-        $request->request->set('user_login',$user->id);
+        $request->request->set('user_login', $user->id);
         Log::create($request->all());
         if ($user->is_register == 0) {
             return $this->successResponseMessage($data, 412, "You need to register a profile");
         }
-        if($user->type == MyConst::NURSE && $user->is_sign ==0){
+        if ($user->type == MyConst::NURSE && $user->is_sign == 0) {
             return $this->successResponseMessage($data, 416, "The nurse needs to sign the form");
         }
 
