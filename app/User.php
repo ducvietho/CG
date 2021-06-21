@@ -43,7 +43,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'fcm_token'=>'',
         'block'=>0,
         'is_sign'=>0,
-        'role'=>0
+        'role'=>0,
+        'city_code'=>'',
+        'district_code'=>'',
+        'address'=>'',
+        'provide_id'=>0,
+        'code_address'=>'',
+        'address_detail'=>'',
+        'password'=>'',
+        'user_id'=>''
     ];
     public function getJWTIdentifier()
     {
@@ -57,28 +65,19 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public static function createNew($data)
     {
-        $user = User::create([
-            'user_id' => $data['user_id'],
-            'password' => Hash::make($data['password']),
-            'name' => $data['name'],
-            'user_name' => $data['user_name'],
-            'gender' => $data['gender'],
-            'birthday' => $data['birthday'],
-            'phone' => $data['phone'],
-            'email' => $data['email'],
-            'code_address' => isset($data['city_code']) ? $data['city_code'] : '',
-            'district_code' => isset($data['district_code']) ? $data['district_code'] : '',
-            'address_detail' => isset($data['address']) ? $data['address'] : '',
-            'avatar' => env('AVATAR_DEFAULT', ''),
-            'type' => isset($data['type']) ? $data['type'] : 1,
-            'fcm_token' => '',
-            'provide_id' => isset($data['provide_id']) ? $data['provide_id'] : '',
-            'type_account' => isset($data['type_account']) ? $data['type_account'] : 0,
-            'setting_care' => 1,
-            'is_register' => ($data['type'] == 2) ? 1 : 0,
-            'role' => isset($data['role']) ? $data['role'] : 0,
-        ]);
-        return $user;
+        if (isset($data['city_code']))
+        {
+            $data['code_address'] = $data['city_code'];
+        }
+        if (isset($data['address_detail']))
+        {
+            $data['address_detail'] = $data['address'];
+        }
+        if (isset($data['type']))
+        {
+            $data['is_register'] = ($data['type'] == 2) ? 1: 0;
+        }
+        return self::create($data);
     }
 
     public function city()

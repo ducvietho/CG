@@ -31,16 +31,16 @@ class RegisterController extends Controller
             'user_id' =>'required|min:6|unique:users',
             'name' => 'required',
             'password' => 'required|min:6',
-            'gender' => 'required',
-            'birthday' => 'required',
+            'gender' => 'required|numeric',
+            'birthday' => 'required|numeric',
             'phone' => 'required|min:10',
         ]);
-        $user = User::createNew($request->all());
-        if($request->avatar != null){
-            $avatar = $this->upload(0,$request->avatar,$user->id);
-            $user->avatar = $avatar;
-            $user->save();
+        $input = $request->only(['email','user_id','name','password','gender','birthday','phone','city_code','district_code','address','type','type_account']);
+        if($request->get('avatar') != null){
+            $avatar = $this->upload(0,$request->get('avatar'),0);
+            $input['avatar'] = $avatar;
         }
+        $user = User::createNew($input);
         $data['token'] = $this->jwt->fromUser($user);
         $data['user'] = new UserResource($user);
         return $this->successResponseMessage($data,200,'Register success');
@@ -55,14 +55,12 @@ class RegisterController extends Controller
             'birthday' => 'required',
             'phone' => 'required|min:10',
         ]);
-        $request->request->set('user_id','');
-        $request->request->set('password','');
-        $user = User::createNew($request->all());
-        if($request->avatar != null){
-            $avatar = $this->upload(0,$request->avatar,$user->id);
-            $user->avatar = $avatar;
-            $user->save();
+        $input = $request->only(['provide_id','email','user_id','name','password','gender','birthday','phone','city_code','district_code','address','type','type_account']);
+        if($request->get('avatar') != null){
+            $avatar = $this->upload(0,$request->get('avatar'),0);
+            $input['avatar'] = $avatar;
         }
+        $user = User::createNew($input);
         $data['token'] = $this->jwt->fromUser($user);
         $data['user'] = new UserResource($user);
         return $this->successResponseMessage($data,200,'Register social success');
