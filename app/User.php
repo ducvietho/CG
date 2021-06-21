@@ -36,7 +36,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
-
+    protected $attributes = [
+        'avatar'=>'',
+        'type'=>1,
+        'type_account'=>0,
+        'fcm_token'=>'',
+        'block'=>0,
+        'is_sign'=>0,
+        'role'=>0
+    ];
     public function getJWTIdentifier()
     {
         return $this->getKey();
