@@ -14,10 +14,11 @@ class RegisterController extends Controller
     use MediaClass;
     use ApiResponser;
     protected $jwt;
+
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param JWTAuth $jwt
      */
     public function __construct(JWTAuth $jwt)
     {
@@ -36,7 +37,7 @@ class RegisterController extends Controller
             'phone' => 'required|min:10',
         ]);
         $input = $request->only(['email','user_id','name','password','gender','birthday','phone','city_code','district_code','address','type','type_account']);
-        if($request->get('avatar') != null){
+        if($request->get('avatar')){
             $avatar = $this->upload(0,$request->get('avatar'),0);
             $input['avatar'] = $avatar;
         }
@@ -56,7 +57,7 @@ class RegisterController extends Controller
             'phone' => 'required|min:10',
         ]);
         $input = $request->only(['provide_id','email','user_id','name','password','gender','birthday','phone','city_code','district_code','address','type','type_account']);
-        if($request->get('avatar') != null){
+        if($request->get('avatar')){
             $avatar = $this->upload(0,$request->get('avatar'),0);
             $input['avatar'] = $avatar;
         }
@@ -70,10 +71,13 @@ class RegisterController extends Controller
      * Check User ID
      */
     public function checkID(Request $request){
-        $userId = $request->user_id;
+        $this->validate($request, [
+            'user_id'=>'required'
+        ]);
+        $userId = $request->get('user_id');
         $user = User::where('user_id',$userId)->first();
         $data['check'] = 0;
-        if($user != null){
+        if($user){
             $data['check'] = 1;
         }
         return $this->successResponseMessage($data,200,'Check user ID success');
@@ -83,10 +87,13 @@ class RegisterController extends Controller
      * Check Email
      */
     public function checkEmail(Request $request){
-        $email = $request->email;
+        $this->validate($request, [
+            'email'=>'required'
+        ]);
+        $email = $request->get('email');
         $user = User::where('email',$email)->first();
         $data['check'] = 0;
-        if($user != null){
+        if($user){
             $data['check'] = 1;
         }
         return $this->successResponseMessage($data,200,'Check Email success');
