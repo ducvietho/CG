@@ -69,7 +69,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'code_address' => isset($data['city_code']) ? $data['city_code'] : '',
             'district_code' => isset($data['district_code']) ? $data['district_code'] : '',
             'address_detail' => isset($data['address']) ? $data['address'] : '',
-            'avatar' => env('AVATAR_DEFAULT'),
+            'avatar' => env('AVATAR_DEFAULT', ''),
             'type' => isset($data['type']) ? $data['type'] : 1,
             'fcm_token' => '',
             'provide_id' => isset($data['provide_id']) ? $data['provide_id'] : '',
@@ -77,7 +77,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'setting_care' => 1,
             'is_register' => ($data['type'] == 2) ? 1 : 0,
             'role' => isset($data['role']) ? $data['role'] : 0,
-
         ]);
         return $user;
     }
