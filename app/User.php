@@ -44,7 +44,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'is_sign'=>0,
         'role'=>0,
         'district_code'=>'',
-        'address'=>'',
         'provide_id'=>0,
         'code_address'=>'',
         'address_detail'=>'',
