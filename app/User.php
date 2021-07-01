@@ -5,7 +5,6 @@ namespace App;
 use App\Models\City;
 use App\Models\District;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -25,7 +24,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $table = 'users';
     protected $fillable = [
-        'user_name', 'password', 'name', 'email', 'phone', 'address_detail', 'avatar', 'type', 'block', 'code_address', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id', 'type_account', 'setting_care', 'is_register'
+        'user_name', 'password', 'name', 'email', 'phone', 'address_detail', 'avatar', 'type', 'block', 'code_address','city_code', 'gender', 'birthday', 'fcm_token', 'provide_id', 'provide_id', 'district_code', 'user_id', 'type_account', 'setting_care', 'is_register'
     ];
 
     /**
