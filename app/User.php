@@ -48,7 +48,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'code_address'=>'',
         'address_detail'=>'',
         'password'=>'',
-        'user_id'=>''
+        'user_id'=>'',
+        'user_name'=>''
     ];
     public function getJWTIdentifier()
     {
